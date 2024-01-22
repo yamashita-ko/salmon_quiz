@@ -14,8 +14,8 @@ function initWeaponQuiz() {
 	window.objCols = [];
 	window.weaponAnswerIndex = -1;
 	window.questionData = [];
-	window.questionSelect = [];	// 4択の質問
-	window.questionAnswer = [];	// 回答済みの質問
+	window.questionSelect = [];
+	window.questionAnswer = [];
 	window.answerAllText = "";
 }
 
@@ -28,13 +28,35 @@ function uninitWeaponQuiz() {
 	window.questionDataOrg = [];
 	window.weaponAnswerIndex = -1;
 	window.questionData = [];
-	window.questionSelect = [];	// 4択の質問
-	window.questionAnswer = [];	// 回答済みの質問
+	window.questionSelect = [];
+	window.questionAnswer = [];
 	window.answerAllText = "";
 }
 
 /**
+ * 武器クイズ画面作成
+ */
+async function createWeaponQuiz() {
+	initWeaponQuiz();
+	if(window.weaponData.length == 0) {
+		// 武器データ・質問データの取得は初回のみ
+		await Promise.all(
+			// 並行処理でリクエスト
+            window.weaponData = await fetch("http://" + location.host + "/weapon").then(function(res) {
+                return res.json();
+            }),
+            window.questionDataOrg = await fetch("http://" + location.host + "/weapon-question").then(function(res) {
+                return res.json();
+            })
+		);
+	}
+	createWeaponQuizData();
+	window.objCols = drawWeaponQuiz(window.weaponData);
+}
+
+/**
  * 武器クイズ画面　初期表示・判定設定
+ * @param {Object[]} weaponData 武器データ
  * @return {Object[]} 当たり判定用オブジェクトリスト
  */
 function drawWeaponQuiz(weaponData) {
@@ -63,7 +85,7 @@ function drawWeaponQuiz(weaponData) {
 	}
 	
 	let hintListObj = createObject(HINT_LIST);
-	hintListObj.text = window.answerAllText;
+	hintListObj.text = HINT_LIST.TEXT + window.answerAllText;
 	cols.push(drawText(hintListObj));
 	cols.push(drawText(createObject(ANSWER_BUTTON)));
 	cols.push(drawText(createObject(SELECT_FRAME)));
@@ -78,36 +100,6 @@ function drawWeaponQuiz(weaponData) {
 		cols.push(drawText(weaponObj));
 	}
 	
-	return cols;
-}
-/**
- * 武器クイズリザルト画面　初期表示・判定設定
- * @return {Object[]} 当たり判定用オブジェクトリスト
- */
-function drawWeaponQuizResult() {
-	var cols = [];
-	var WEAPON_IMAGE = PANEL_WEAPON_QUIZ_RESULT.WEAPON_IMAGE;
-	var CORRECT_IMAGE = PANEL_WEAPON_QUIZ_RESULT.CORRECT_IMAGE;
-	var HINT_ALL = PANEL_WEAPON_QUIZ_RESULT.HINT_ALL;
-	var MORE_BUTTON = PANEL_WEAPON_QUIZ_RESULT.MORE_BUTTON;
-	var RETURN_BUTTON = PANEL_WEAPON_QUIZ_RESULT.RETURN_BUTTON;
-	
-	var weaponImageObj = createObject(WEAPON_IMAGE);
-	weaponImageObj.image = WEAPON_IMAGE.IMAGE + window.weaponData[weaponAnswerIndex].image;
-	cols.push(drawText(weaponImageObj));
-	cols.push(drawText(createObject(CORRECT_IMAGE)));
-	var hintAllObj = createObject(HINT_ALL);
-	// ヒントをすべてまとめた一覧を作成
-	let resultHint = "";
-	resultHint += window.questionData.map((obj) => {
-		return obj.answer;
-	});
-	// カンマ区切りで出力されるため区切り文字を変更
-	resultHint = resultHint.replace(/,/g, "\\n")
-	hintAllObj.text = resultHint;
-	cols.push(drawText(hintAllObj));
-	cols.push(drawText(createObject(MORE_BUTTON)));
-	cols.push(drawText(createObject(RETURN_BUTTON)));
 	return cols;
 }
 
@@ -138,16 +130,16 @@ function createQuestionSelect(questionData, questionAnswer, questionSelect) {
  * @return {Object[]} 質問データ　参照渡しのため必要ないが可読性の観点から記載
  */
 function replaceAnswer(questionData, weaponData, weaponAnswerIndex) {
-	const VARIBALE_TYPE = "type";
-	const VARIBALE_MAX_DAMAGE = "maxDamage";
-	const VARIBALE_MIN_DAMAGE = "minDamage";
-	const VARIBALE_IS_CHARGE = "isCharge";
-	const VARIBALE_IS_EXPLOSION = "isExplosion";
-	const VARIBALE_RANGE = "range";
-	const VARIBALE_DPS = "dps";
-	const VARIBALE_ACTUAL_DPS = "actualDps";
-	const VARIBALE_TOTAL_DAMAGE = "totalDamage";
-	const VARIBALE_INK_LOCK = "inkLock";
+	const VARIABLE_TYPE = "type";
+	const VARIABLE_MAX_DAMAGE = "maxDamage";
+	const VARIABLE_MIN_DAMAGE = "minDamage";
+	const VARIABLE_IS_CHARGE = "isCharge";
+	const VARIABLE_IS_EXPLOSION = "isExplosion";
+	const VARIABLE_RANGE = "range";
+	const VARIABLE_DPS = "dps";
+	const VARIABLE_ACTUAL_DPS = "actualDps";
+	const VARIABLE_TOTAL_DAMAGE = "totalDamage";
+	const VARIABLE_INK_LOCK = "inkLock";
 	const CHARGE_ENABLE_WORD = "できる";
 	const CHARGE_DISABLE_WORD = "できない";
 	const EXPLOSION_ENABLE_WORD = "ある";
@@ -155,34 +147,34 @@ function replaceAnswer(questionData, weaponData, weaponAnswerIndex) {
 	
     for (let i = 0; i < questionData.length; i++) {
 		switch(questionData[i].variable){
-			case VARIBALE_TYPE:
+			case VARIABLE_TYPE:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].type);
 				break;
-			case VARIBALE_MAX_DAMAGE:
+			case VARIABLE_MAX_DAMAGE:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].maxDamage);
 				break;
-			case VARIBALE_MIN_DAMAGE:
+			case VARIABLE_MIN_DAMAGE:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].minDamage);
 				break;
-			case VARIBALE_IS_CHARGE:
+			case VARIABLE_IS_CHARGE:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].isCharge ? CHARGE_ENABLE_WORD : CHARGE_DISABLE_WORD);
 				break;
-			case VARIBALE_IS_EXPLOSION:
+			case VARIABLE_IS_EXPLOSION:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].isExplosion ? EXPLOSION_ENABLE_WORD : EXPLOSION_DISABLE_WORD);
 				break;
-			case VARIBALE_RANGE:
+			case VARIABLE_RANGE:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].range);
 				break;
-			case VARIBALE_DPS:
+			case VARIABLE_DPS:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].dps);
 				break;
-			case VARIBALE_ACTUAL_DPS:
+			case VARIABLE_ACTUAL_DPS:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].actualDps);
 				break;
-			case VARIBALE_TOTAL_DAMAGE:
+			case VARIABLE_TOTAL_DAMAGE:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].totalDamage);
 				break;
-			case VARIBALE_INK_LOCK:
+			case VARIABLE_INK_LOCK:
 				questionData[i].answer = sprintf(questionData[i].answer, weaponData[weaponAnswerIndex].inkLock);
 				break;
 		}
@@ -193,8 +185,8 @@ function replaceAnswer(questionData, weaponData, weaponAnswerIndex) {
 /**
  * 質問・武器関連のデータを作成
  */
-function createWeaponQuiz() {
-	// 質問を値渡しでクローン作成
+function createWeaponQuizData() {
+	// クローン作成
 	window.questionData = JSON.parse(JSON.stringify(window.questionDataOrg));
 	window.weaponAnswerIndex = getRandomInt(window.weaponData.length);
 	window.questionData = replaceAnswer(window.questionData, window.weaponData, window.weaponAnswerIndex);
@@ -202,5 +194,68 @@ function createWeaponQuiz() {
 	window.answerAllText += window.questionData[window.questionAnswer[window.questionAnswer.length - 1]].answer;
 	for(let i = 0; i < PANEL_WEAPON_QUIZ.QUESTION_SELECT_BUTTON.NUM; i++) {
 		window.questionSelect.push(createQuestionSelect(window.questionData, window.questionAnswer, window.questionSelect));
+	}
+}
+
+/**
+ * 武器クイズ画面　クリック処理
+ * @param {Object} obj クリック対象(参照型)
+ */
+function clickWeaponQuiz(obj) {
+	if(obj.name == PANEL_WEAPON_QUIZ.ANSWER_BUTTON.NAME) {
+		obj.state &= ~TEXT_STATE.HOVER;
+		// 質問画面から回答画面へ判定を切り替える
+		window.objCols.map((o)=>{
+			// 両方の画面で使う要素はないのでenableを反転させる
+			o.state ^= TEXT_STATE.ENABLE;
+			if(o.state & TEXT_STATE.ENABLE) {
+				drawText(o);
+			}
+		});
+	} else if(obj.name == PANEL_SELECT_WEAPON.CANCEL.NAME) {
+		clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+		// 回答画面から質問画面へ判定を切り替える
+		var func = () => {
+			window.objCols.map((o)=>{
+				// 両方の画面で使う要素はないのでenableを反転させる
+				o.state ^= TEXT_STATE.ENABLE;
+				if(o.state & TEXT_STATE.ENABLE) {
+					drawText(o);
+				}
+			});
+		}
+		initDraw(func);
+	} else if(obj.name.indexOf(PANEL_SELECT_WEAPON.WEAPON.NAME) != -1) {
+		if(window.weaponData[weaponAnswerIndex].id == obj.name.replace(PANEL_SELECT_WEAPON.WEAPON.NAME, "")) {
+			window.objCols = [];
+			// 2週目に再利用するためuninitはしない
+			changeMode(MODE.WEAPON_QUIZ_RESULT);
+		} else {
+			obj.state &= ~TEXT_STATE.ACTIVE;
+			drawText(obj);
+		}
+	} else {
+		// 質問ボタンクリック判定
+		let questionSelect_button_index = obj.name.slice(-1);
+		window.questionAnswer.push(questionSelect[questionSelect_button_index - 1]);
+		window.answerAllText += "\\n" + window.questionData[window.questionAnswer[window.questionAnswer.length - 1]].answer;
+		window.questionSelect[questionSelect_button_index - 1] = createQuestionSelect(window.questionData, window.questionAnswer, window.questionSelect);
+		obj.text = (window.questionSelect[questionSelect_button_index - 1] != -1) ? window.questionData[questionSelect[questionSelect_button_index - 1]].question : "";
+		if(window.questionSelect[questionSelect_button_index - 1] == -1)
+			obj.state &= ~TEXT_STATE.ACTIVE;
+		// ヒント・ヒント一覧・押したボタンをを更新
+		window.objCols.map((o) => {
+			if(o.name == PANEL_WEAPON_QUIZ.ANSWER_TEXT.NAME) {
+				let answer = questionData[questionAnswer[questionAnswer.length - 1]].answer
+				if(questionData[questionAnswer[questionAnswer.length - 1]].note)
+					answer += questionData[questionAnswer[questionAnswer.length - 1]].note;
+				o.text = answer;
+				drawText(o);
+			} else if(o.name == PANEL_WEAPON_QUIZ.HINT_LIST.NAME) {
+				o.text = PANEL_WEAPON_QUIZ.HINT_LIST.TEXT + window.answerAllText;
+				drawText(o);
+			}
+		});
+		drawText(obj);
 	}
 }

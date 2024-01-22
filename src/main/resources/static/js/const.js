@@ -1,4 +1,6 @@
-// 共通
+/**
+ * 共通
+ */
 var CANVAS_WIDTH = 1920;
 var CANVAS_HEIGHT = 1080;
 var TEXT_STATE = {
@@ -16,14 +18,19 @@ var TEXT_STATE = {
 var MODE = {
 	SELECT: "mode_select",
 	WEAPON_QUIZ: "mode_weapon_quiz",
-	WEAPON_QUIZ_RESULT: "weapon_quiz_result"
+	WEAPON_QUIZ_RESULT: "mode_weapon_quiz_result",
+	ENEMY_QUIZ: "mode_enemy_quiz",
+	OTHER_QUIZ: "mode_other_quiz",
+	DIFFICULT_QUIZ: "mode_difficult_quiz"
 };
 
-// モード選択画面
+/**
+ * モード選択画面
+ */
 var PANEL_MODE_SELECT = {
 	COMMENT: {
 		NAME: MODE.SELECT + "_text",
-		TEXT: "ステージを選択してください。",
+		TEXT: "遊びたいモードを選択してください。",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 2,
 		CENTERY: 110,
@@ -64,14 +71,16 @@ var PANEL_MODE_SELECT = {
 		SCALEY: 100,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
-			NORMAL: "#548235",
-			HOVER: "#BBBB35"
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000"
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
 	}
 };
 
-// 武器クイズ画面
+/**
+ * 武器クイズ画面
+ */
 var PANEL_WEAPON_QUIZ = {
 	ANSWER_TEXT: {
 		NAME: MODE.WEAPON_QUIZ + "_answer_text",
@@ -95,14 +104,15 @@ var PANEL_WEAPON_QUIZ = {
 		SCALEY: 100,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
-			NORMAL: "#548235",
-			HOVER: "#BBBB35",
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000",
 			DISABLE: "#555555"
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY
 	},
 	HINT_LIST: {
 		NAME: MODE.WEAPON_QUIZ + "_hint_list",
+		TEXT: "＜ヒント一覧＞\\n",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 9 * 5,
 		CENTERY: 600,
@@ -128,7 +138,10 @@ var PANEL_WEAPON_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY
 	}
 };
-// 武器選択画面
+
+/**
+ * 武器選択画面
+ */
 var PANEL_SELECT_WEAPON = {
 	SELECT_FRAME: {
 		NAME: MODE.WEAPON_QUIZ + "_select_frame",
@@ -171,10 +184,13 @@ var PANEL_SELECT_WEAPON = {
 			DISABLE: "#555555"
 		},
 		STATE: TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE,
-		IMAGE: "http://localhost:8080/images/"
+		IMAGE: "http://" + location.host + "/images/"
 	}
 };
-// 武器クイズリザルト
+
+/**
+ * 武器クイズリザルト画面
+ */
 var PANEL_WEAPON_QUIZ_RESULT = {
 	CORRECT_IMAGE: {
 		NAME: MODE.WEAPON_QUIZ_RESULT + "_correct_image",
@@ -183,7 +199,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		SCALEX: 500,
 		SCALEY: 500,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://localhost:8080/images/correct.png"
+		IMAGE: "http://" + location.host + "/images/correct.png"
 	},
 	WEAPON_IMAGE: {
 		NAME: MODE.WEAPON_QUIZ_RESULT + "_weapon_image",
@@ -192,7 +208,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		SCALEX: 500,
 		SCALEY: 500,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://localhost:8080/images/"
+		IMAGE: "http://" + location.host + "/images/"
 	},
 	HINT_ALL: {
 		NAME: MODE.WEAPON_QUIZ_RESULT + "_answer_text",
@@ -210,7 +226,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		TEXT: "もう一度挑戦する",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 4 * 1,
-		CENTERY: CANVAS_WIDTH / 2,
+		CENTERY: 900,
 		SCALEX: 500,
 		SCALEY: 150,
 		TEXT_COLOR: "#FFFFFF",
@@ -225,7 +241,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		TEXT: "モード選択画面へ戻る",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 4 * 3,
-		CENTERY: CANVAS_WIDTH / 2,
+		CENTERY: 900,
 		SCALEX: 500,
 		SCALEY: 150,
 		TEXT_COLOR: "#FFFFFF",
@@ -236,34 +252,3 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
 	},
 }
-
-
-
-
-
-
-
-	const RESULT_CORRECT_IMAGE_CENTERX = window.CANVAS_WIDTH / 16 * 3;
-	const RESULT_CORRECT_IMAGE_CENTERY = 250;
-	const RESULT_CORRECT_IMAGE_SCALEX = 500;
-	const RESULT_CORRECT_IMAGE_SCALEY = 500;
-	const RESULT_CORRECT_WEAPON_IMAGE_CENTERX = window.CANVAS_WIDTH / 16 * 5;
-	const RESULT_CORRECT_WEAPON_IMAGE_CENTERY = 400;
-	const RESULT_CORRECT_WEAPON_IMAGE_SCALEX = 500;
-	const RESULT_CORRECT_WEAPON_IMAGE_SCALEY = 500;
-	const RESULT_TEXT_HINT_CENTERX = window.CANVAS_WIDTH / 4 * 3;
-	const RESULT_TEXT_HINT_CENTERY = 400;
-	const RESULT_TEXT_HINT_SCALEX = 700;
-	const RESULT_TEXT_HINT_SCALEY = 600;
-	const RESULT_BUTTON_CENTERX = window.CANVAS_WIDTH / 4 * 1;
-	const RESULT_BUTTON_CENTERX_SPACE = window.CANVAS_WIDTH / 2;
-	const RESULT_BUTTON_CENTERY = 900;
-	const RESULT_BUTTON_SCALEX = 500;
-	const RESULT_BUTTON_SCALEY = 150;
-	const INFO_COLOR = "#548235";
-	const TEXT_COLOR = "#FFFFFF";
-	const BUTTON_COLOR = "#0070C0";
-	const BUTTON_HOVER_COLOR = "#FFC000";
-	const TEXT_RESULT_MORE = "もう一度挑戦する";
-	const TEXT_RESULT_RETURN = "モード選択画面へ戻る";
-	const FONT_SIZE = 32;

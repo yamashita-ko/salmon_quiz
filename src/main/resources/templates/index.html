@@ -23,27 +23,29 @@
 	<script src="js/const.js"></script>
 	<script src="js/mode_select.js"></script>
 	<script src="js/weapon_quiz.js"></script>
+	<script src="js/weapon_quiz_result.js"></script>
 	<script>
 		var CANVAS_MARGIN_TOP = 100;
 		var canvas = document.getElementById("canvas");
 		var ctx = canvas.getContext("2d");
 		var objCols = [];
-		var MODE_ENEMY_QUIZ = "enemy_quiz";
-		var MODE_OTHER_QUIZ = "other_quiz";
-		var MODE_DIFFICULT_QUIZ = "difficult_quiz";
-		var mode =window.MODE.SELECT;
+		var mode;
 		
-		// 初回起動
-		window.onload = function() {
-		    var func = function() {
+		/**
+		 * 初回起動
+		 */
+		window.onload = () => {
+		    var func = () => {
 				changeMode(MODE.SELECT);
 			}
 		    initDraw(func);
 		}
 		
-		// キャンバス内クリック
-		window.canvas.onclick = function(event) {
-			// キャンバスのオフセットを取得
+		/**
+		 * キャンバス内クリック判定処理
+		 * @param {Object} event DOMイベント
+		 */
+		window.canvas.onclick = (event) => {
     		const rect = event.target.getBoundingClientRect();
     		let mouse = {x: event.clientX - rect.left, y: event.clientY - rect.top};
 			console.log("X:" + mouse.x + " Y:" + mouse.y);
@@ -51,99 +53,38 @@
 				if((window.objCols[i].state & TEXT_STATE.IS_BUTTON) == false) continue;
 				if((window.objCols[i].state & TEXT_STATE.ENABLE) == false) continue;
 				if((window.objCols[i].state & TEXT_STATE.ACTIVE) == false) continue;
-				// 当たり判定
 				if(collision(window.objCols[i].centerX, window.objCols[i].centerY, window.objCols[i].scaleX, window.objCols[i].scaleY, mouse.x, mouse.y) == false) {
 					continue;
 				}
 				if(window.mode == MODE.SELECT){
-					if(window.objCols[i].name == PANEL_MODE_SELECT.BUTTON.NAME[PANEL_MODE_SELECT.BUTTON.INDEX.WEAPON_QUIZ - 1]) {
-						let modeName = window.objCols[i].name;
-						// モード選択画面終了処理
-						uninitModeSelect();
-						changeMode(modeName);
-					}
+					clickModeSelect(window.objCols[i]);
 				} else if(window.mode == MODE.WEAPON_QUIZ) {
-					if(window.objCols[i].name == PANEL_WEAPON_QUIZ.ANSWER_BUTTON.NAME) {
-						objCols[i].state &= ~TEXT_STATE.HOVER;
-						// 質問画面から回答画面へ判定を切り替える
-						window.objCols.map((obj)=>{
-							// 両方の画面で使う要素はないのでenableを反転させる
-							obj.state ^= TEXT_STATE.ENABLE;
-							if(obj.state & TEXT_STATE.ENABLE) {
-								drawText(obj);
-							}
-						});
-					} else if(window.objCols[i].name == PANEL_SELECT_WEAPON.CANCEL.NAME) {
-						clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
-						// 回答画面から質問画面へ判定を切り替える
-						var func = () => {
-							window.objCols.map((obj)=>{
-								// 両方の画面で使う要素はないのでenableを反転させる
-								obj.state ^= TEXT_STATE.ENABLE;
-								if(obj.state & TEXT_STATE.ENABLE) {
-									drawText(obj);
-								}
-							});
-						}
-						initDraw(func);
-					} else if(window.objCols[i].name.indexOf(PANEL_SELECT_WEAPON.WEAPON.NAME) != -1) {
-						if(window.weaponData[weaponAnswerIndex].id == objCols[i].name.replace(PANEL_SELECT_WEAPON.WEAPON.NAME, "")) {
-							// リザルトへ遷移
-							window.objCols = [];
-							changeMode(MODE.WEAPON_QUIZ_RESULT);
-						} else {
-							window.objCols[i].state &= ~TEXT_STATE.ACTIVE;
-							drawText(window.objCols[i]);
-						}
-					} else {
-						// 質問ボタンクリック判定
-						let questionSelect_button_index = window.objCols[i].name.slice(-1);
-						window.questionAnswer.push(questionSelect[questionSelect_button_index - 1]);
-						window.answerAllText += "\\n" + window.questionData[window.questionAnswer[window.questionAnswer.length - 1]].answer;
-						window.questionSelect[questionSelect_button_index - 1] = createQuestionSelect(window.questionData, window.questionAnswer, window.questionSelect);
-						window.objCols[i].text = (window.questionSelect[questionSelect_button_index - 1] != -1) ? window.questionData[questionSelect[questionSelect_button_index - 1]].question : "";
-						if(window.questionSelect[questionSelect_button_index - 1] == -1)
-							window.objCols[i].state &= ~TEXT_STATE.ACTIVE;
-						// ヒント・ヒント一覧・押したボタンをを更新
-						window.objCols.map((obj) => {
-							if(obj.name == PANEL_WEAPON_QUIZ.ANSWER_TEXT.NAME) {
-								let answer = questionData[questionAnswer[questionAnswer.length - 1]].answer
-								if(questionData[questionAnswer[questionAnswer.length - 1]].note)
-									answer += questionData[questionAnswer[questionAnswer.length - 1]].note;
-								obj.text = answer;
-								drawText(obj);
-							} else if(obj.name == PANEL_WEAPON_QUIZ.HINT_LIST.NAME) {
-								obj.text = window.answerAllText;
-								drawText(obj);
-							}
-						});
-						drawText(window.objCols[i]);
-					}
+					clickWeaponQuiz(window.objCols[i]);
 				} else if(window.mode == MODE.WEAPON_QUIZ_RESULT) {
-					if(window.objCols[i].name == PANEL_WEAPON_QUIZ_RESULT.MORE_BUTTON.NAME) {
-						changeMode(MODE.WEAPON_QUIZ);
-					} else if(window.objCols[i].name == PANEL_WEAPON_QUIZ_RESULT.RETURN_BUTTON.NAME) {
-						// 武器クイズの終了処理
-						uninitWeaponQuiz();
-						changeMode(MODE.SELECT);
-					}
+					clickWeaponQuizResult(window.objCols[i]);
 				}
 				break;
 			}
 		}
 		
-		// 背景を含めて画面作成
+		/**
+		 * 背景描画→関数オブジェクト描画
+		 * @param {function} func 背景描画後の処理
+		 */
 		function initDraw(func) {
 			// 背景画像の読み込み後に処理を行う 読み込み前に処理を行うと画面崩れする
 			var background = new Image();
-			background.src = "http://localhost:8080/images/bg.png";
+			background.src = "http://" + location.host + "/images/bg.png";
 		    background.onload = function() {
 				window.ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 				func();
 			}
 		}
 		
-		// モード変更 
+		/**
+		 * モード変更
+		 * @param {Object} mode 背景描画後の処理
+		 */
 		function changeMode(mode) {
 			clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
 			window.objCols = [];
@@ -152,51 +93,27 @@
 			var result = [];
 			
 			if(mode == MODE.SELECT) {
-				func = () => {
-					initModeSelect();
-					window.objCols = drawModeSelect();
-				}
+				func = createModeSelect;
 			} else if(mode == MODE.WEAPON_QUIZ) {
-				// 並行処理でリクエスト
-				func = async () => {
-					// 武器クイズ画面初期化
-					initWeaponQuiz()
-					// 武器データがあれば２週目
-					if(window.weaponData.length == 0) {
-						await Promise.all(
-				            window.weaponData = await fetch("http://" + location.host + "/weapon").then(function(res) {
-				                return res.json();
-				            }),
-				            window.questionDataOrg = await fetch("http://" + location.host + "/weapon-question").then(function(res) {
-				                return res.json();
-				            })
-						);
-					}
-					// 質問・武器関連のデータを作成
-					createWeaponQuiz();
-					// 画面描画
-					window.objCols = drawWeaponQuiz(window.weaponData);
-				}
+				func = createWeaponQuiz;
 			} else if(mode == MODE.WEAPON_QUIZ_RESULT) {
-				func = () => {
-					// 画面描画
-					window.objCols = drawWeaponQuizResult();
-				}
+				func = createWeaponQuizResult;
 			}
 	        initDraw(func);
 		}
 		
-		// マウスホバー
-		canvas.onmousemove = function(event) {
+		/**
+		 * マウスホバー処理
+		 * @param {Object} event DOMイベント
+		 */
+		canvas.onmousemove = (event) => {
     		const rect = event.target.getBoundingClientRect();
     		let mouse = {x: event.clientX - rect.left, y: event.clientY - rect.top};
-			//console.log("X:" + mouse.x + " Y:" + mouse.y);
 			
             for (let i = 0; i < window.objCols.length; i++) {
 				if((window.objCols[i].state & TEXT_STATE.IS_BUTTON) == false) continue;
 				if((window.objCols[i].state & TEXT_STATE.ENABLE) == false) continue;
 				if((window.objCols[i].state & TEXT_STATE.ACTIVE) == false) continue;
-				// 当たり判定
 				if(collision(window.objCols[i].centerX, window.objCols[i].centerY, window.objCols[i].scaleX, window.objCols[i].scaleY, mouse.x, mouse.y) == false) {
 					if(window.objCols[i].state & TEXT_STATE.HOVER) {
 						// ボタン消灯
@@ -208,18 +125,27 @@
 				if(window.objCols[i].state & TEXT_STATE.HOVER){
 					continue;
 				}
-        		// 色を変えて追加
+        		// ボタン点灯
 				window.objCols[i].state |= TEXT_STATE.HOVER;
 				drawText(window.objCols[i]);
 			}
 		}
 		
-		// 画面削除
+		/**
+		 * 画面削除処理
+		 * @param {Object} ctx キャンバスのContext
+		 * @param {number} width 幅
+		 * @param {number} height 高さ
+		 */
 		function clear(ctx, width, height) {
-			window.ctx.clearRect(0, 0, width, height);
+			ctx.clearRect(0, 0, width, height);
 		}
 		
-		// 判定用オブジェクト作成
+		/**
+		 * 判定用オブジェクト作成
+		 * @param {Object} data 元データ
+		 * @return {Object} 判定用オブジェクト
+		 */
 		function createObject(data) {
 			var obj = {};
 			obj.name = data.NAME;
@@ -236,7 +162,11 @@
 			return obj;
 		}
 		
-		// テキスト作成
+		/**
+		 * オブジェクト描画
+		 * @param {Object} obj 判定用オブジェクト
+		 * @return {Object} 判定用オブジェクト
+		 */
 		function drawText(obj) {
 			const TEXT_MARGIN = 20;
 			if((obj.state & TEXT_STATE.ENABLE) == false)
@@ -246,8 +176,8 @@
 				window.ctx.beginPath();
 				window.ctx.rect(obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY)
 				if(typeof obj.bgColor === 'object') {
-					let bgColor = obj.state & window.TEXT_STATE.HOVER ? obj.bgColor.HOVER : obj.bgColor.NORMAL;
-					bgColor = obj.state & window.TEXT_STATE.ACTIVE ? bgColor : obj.bgColor.DISABLE;
+					let bgColor = obj.state & TEXT_STATE.HOVER ? obj.bgColor.HOVER : obj.bgColor.NORMAL;
+					bgColor = obj.state & TEXT_STATE.ACTIVE ? bgColor : obj.bgColor.DISABLE;
 					window.ctx.fillStyle = bgColor;
 				} else {
 					window.ctx.fillStyle = obj.bgColor;
@@ -260,7 +190,7 @@
 			}
 			// テキスト描画
 			// \nを区切り文字として分割
- 			if(obj.state & window.TEXT_STATE.IS_TEXT) {
+ 			if(obj.state & TEXT_STATE.IS_TEXT) {
 		  		window.ctx.font = obj.fontSize + "px Arial";
 				const measure = window.ctx.measureText(obj.text);
 				const textHeight= measure.actualBoundingBoxAscent + measure.actualBoundingBoxDescent;
@@ -269,11 +199,11 @@
 		 			var textPosX = obj.centerX - obj.scaleX / 2 + TEXT_MARGIN;
 		 			var textPosY = obj.centerY - obj.scaleY / 2 + textHeight + TEXT_MARGIN;
 		 			textPosY += (textHeight + TEXT_MARGIN) * i;
-		 			if(obj.state & window.TEXT_STATE.CENTERX) {
+		 			if(obj.state & TEXT_STATE.CENTERX) {
 						let textWidth = window.ctx.measureText(texts[i]).width;
 		 				textPosX = obj.centerX - textWidth / 2;
 		 			}
-		 			if(obj.state & window.TEXT_STATE.CENTERY) {
+		 			if(obj.state & TEXT_STATE.CENTERY) {
 		 				textPosY = obj.centerY + textHeight / 2;
 		 			}
 					window.ctx.fillStyle = obj.textColor;
@@ -281,7 +211,7 @@
 				}
 			}
 			// 画像描画
- 			if(obj.state & window.TEXT_STATE.IMAGE) {
+ 			if(obj.state & TEXT_STATE.IMAGE) {
 				const chara = new Image();
 				chara.src = obj.image;
 				let imgStartX = obj.centerX - obj.scaleX / 2;
@@ -289,11 +219,11 @@
 				let imgScaleX = obj.scaleX;
 				let imgScaleY = obj.scaleY;
 				const PADDING = 10;
-				if(obj.state & window.TEXT_STATE.CENTERX) {
+				if(obj.state & TEXT_STATE.CENTERX) {
 					imgStartX += PADDING;
 					imgScaleX -= PADDING * 2;
 				}
-				if(obj.state & window.TEXT_STATE.CENTERY) {
+				if(obj.state & TEXT_STATE.CENTERY) {
 					imgStartY += PADDING;
 					imgScaleY -= PADDING * 2;
 				}

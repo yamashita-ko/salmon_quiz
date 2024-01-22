@@ -17,7 +17,7 @@ function forRange(a, z) {
 }
 
 /**
- * ランダム作成
+ * 乱数作成
  * @param {number} max 乱数の範囲
  * @return {number} 乱数
  * @example
