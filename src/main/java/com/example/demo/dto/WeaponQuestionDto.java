@@ -1,8 +1,8 @@
-package com.example.demo.bean;
+package com.example.demo.dto;
 
 import java.io.Serializable;
 
-public class WeaponQuestionBean implements Serializable {
+public class WeaponQuestionDto implements Serializable {
 	private Integer id;
 	private String question;
 	private String answer;
