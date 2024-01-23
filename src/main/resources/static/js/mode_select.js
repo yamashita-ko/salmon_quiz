@@ -14,7 +14,7 @@ function uninitModeSelect() {
 }
 
 /**
- * モードセレクト画面作成
+ * モード選択画面作成
  */
 function createModeSelect() {
 	initModeSelect();
@@ -22,7 +22,7 @@ function createModeSelect() {
 }
 
 /**
- * モードセレクト画面　初期表示・判定設定
+ * モード選択画面　初期表示・判定設定
  * @return {Object[]} 当たり判定用オブジェクトリスト
  */
 function drawModeSelect() {
@@ -42,14 +42,11 @@ function drawModeSelect() {
 }
 
 /**
- * モードセレクト画面　クリック処理
+ * モード選択画面　クリック処理
  * @param {Object} obj クリック対象
  */
 function clickModeSelect(obj) {
-	const WEAPON_QUIZ_NUM = PANEL_MODE_SELECT.BUTTON.INDEX.WEAPON_QUIZ ;
-	if(obj.name == PANEL_MODE_SELECT.BUTTON.NAME[WEAPON_QUIZ_NUM - 1]) {
-		let modeName = obj.name;
-		uninitModeSelect();
-		changeMode(modeName);
-	}
+	let modeName = obj.name;
+	uninitModeSelect();
+	changeMode(modeName);
 }

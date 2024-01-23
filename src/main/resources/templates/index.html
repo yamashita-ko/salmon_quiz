@@ -24,6 +24,7 @@
 	<script src="js/mode_select.js"></script>
 	<script src="js/weapon_quiz.js"></script>
 	<script src="js/weapon_quiz_result.js"></script>
+	<script src="js/normal_quiz.js"></script>
 	<script>
 		var CANVAS_MARGIN_TOP = 100;
 		var canvas = document.getElementById("canvas");
@@ -62,6 +63,8 @@
 					clickWeaponQuiz(window.objCols[i]);
 				} else if(window.mode == MODE.WEAPON_QUIZ_RESULT) {
 					clickWeaponQuizResult(window.objCols[i]);
+				} else if(window.mode == MODE.NORMAL_QUIZ) {
+					clickNormalQuiz(window.objCols[i]);
 				}
 				break;
 			}
@@ -98,6 +101,10 @@
 				func = createWeaponQuiz;
 			} else if(mode == MODE.WEAPON_QUIZ_RESULT) {
 				func = createWeaponQuizResult;
+			} else if(mode == MODE.NORMAL_QUIZ) {
+				func = () => {
+					createNormalQuiz();
+				}
 			}
 	        initDraw(func);
 		}
@@ -178,6 +185,7 @@
 				if(typeof obj.bgColor === 'object') {
 					let bgColor = obj.state & TEXT_STATE.HOVER ? obj.bgColor.HOVER : obj.bgColor.NORMAL;
 					bgColor = obj.state & TEXT_STATE.ACTIVE ? bgColor : obj.bgColor.DISABLE;
+					bgColor = obj.state & TEXT_STATE.HILIGHT ? obj.bgColor.HILIGHT: bgColor;
 					window.ctx.fillStyle = bgColor;
 				} else {
 					window.ctx.fillStyle = obj.bgColor;
@@ -214,20 +222,31 @@
  			if(obj.state & TEXT_STATE.IMAGE) {
 				const chara = new Image();
 				chara.src = obj.image;
-				let imgStartX = obj.centerX - obj.scaleX / 2;
-				let imgStartY = obj.centerY - obj.scaleY / 2;
-				let imgScaleX = obj.scaleX;
-				let imgScaleY = obj.scaleY;
-				const PADDING = 10;
-				if(obj.state & TEXT_STATE.CENTERX) {
-					imgStartX += PADDING;
-					imgScaleX -= PADDING * 2;
-				}
-				if(obj.state & TEXT_STATE.CENTERY) {
-					imgStartY += PADDING;
-					imgScaleY -= PADDING * 2;
-				}
 				chara.onload = () => {
+					let imgStartX = obj.centerX - obj.scaleX / 2;
+					let imgStartY = obj.centerY - obj.scaleY / 2;
+					let imgScaleX = obj.scaleX;
+					let imgScaleY = obj.scaleY;
+					if(chara.naturalWidth > chara.naturalHeight) {
+						let oldScaleY = imgScaleY;
+						imgScaleY = imgScaleY * (chara.naturalHeight / chara.naturalWidth);
+						imgStartY = imgStartY + (oldScaleY - imgScaleY) / 2;
+					} else {
+						let oldScaleX = imgScaleX;
+						imgScaleX = imgScaleX * (chara.naturalWidth / chara.naturalHeight);
+						imgStartX = imgStartX + (oldScaleX - imgScaleX) / 2;
+					}
+					const PADDING = 10;
+					if(obj.state & TEXT_STATE.CENTERX) {
+						imgStartX += PADDING;
+						imgScaleX -= PADDING * 2;
+					}
+					if(obj.state & TEXT_STATE.CENTERY) {
+						imgStartY += PADDING;
+						imgScaleY -= PADDING * 2;
+					}
+					console.log(chara.naturalWidth);
+					console.log(chara.naturalHeight);
 					window.ctx.drawImage(chara, imgStartX, imgStartY, imgScaleX, imgScaleY);
 				}
 			}

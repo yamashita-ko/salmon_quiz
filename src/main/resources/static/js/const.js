@@ -3,6 +3,7 @@
  */
 var CANVAS_WIDTH = 1920;
 var CANVAS_HEIGHT = 1080;
+var IMAGE_PATH = "http://" + location.host + "/images/";
 var TEXT_STATE = {
     IS_TEXT: 1<<0,
     IS_BUTTON: 1<<1,
@@ -12,7 +13,8 @@ var TEXT_STATE = {
     CENTERY: 1<<5,
     HOVER: 1<<6,
     IMAGE: 1<<7,
-    BG_DISABLE: 1<<8
+    BG_DISABLE: 1<<8,
+    HILIGHT: 1<<9
 };
 
 var MODE = {
@@ -20,7 +22,7 @@ var MODE = {
 	WEAPON_QUIZ: "mode_weapon_quiz",
 	WEAPON_QUIZ_RESULT: "mode_weapon_quiz_result",
 	ENEMY_QUIZ: "mode_enemy_quiz",
-	OTHER_QUIZ: "mode_other_quiz",
+	NORMAL_QUIZ: "mode_normal_quiz",
 	DIFFICULT_QUIZ: "mode_difficult_quiz"
 };
 
@@ -29,7 +31,7 @@ var MODE = {
  */
 var PANEL_MODE_SELECT = {
 	COMMENT: {
-		NAME: MODE.SELECT + "_text",
+		NAME: "text",
 		TEXT: "遊びたいモードを選択してください。",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 2,
@@ -37,10 +39,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: CANVAS_WIDTH - 200,
 		SCALEY: 200,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: {
-			NORMAL: "#548235",
-			HOVER: "#BBBB35"
-		},
+		BG_COLOR: "#548235",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY
 	},
 	BUTTON: {
@@ -54,7 +53,7 @@ var PANEL_MODE_SELECT = {
 		NAME: [
 			"mode_weapon_quiz",
 			"mode_enemy_quiz",
-			"mode_other_quiz",
+			"mode_normal_quiz",
 			"mode_difficult_quiz"
 		],
 		TEXT: [
@@ -83,7 +82,7 @@ var PANEL_MODE_SELECT = {
  */
 var PANEL_WEAPON_QUIZ = {
 	ANSWER_TEXT: {
-		NAME: MODE.WEAPON_QUIZ + "_answer_text",
+		NAME: "answer_text",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 2,
 		CENTERY: 135,
@@ -95,7 +94,7 @@ var PANEL_WEAPON_QUIZ = {
 	},
 	QUESTION_SELECT_BUTTON: {
 		NUM: 4,
-		NAME: MODE.WEAPON_QUIZ + "_question",
+		NAME: "question",
 		FONT_SIZE: 24,
 		CENTERX: CANVAS_WIDTH / 5,
 		CENTERY: 350,
@@ -111,7 +110,7 @@ var PANEL_WEAPON_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY
 	},
 	HINT_LIST: {
-		NAME: MODE.WEAPON_QUIZ + "_hint_list",
+		NAME: "hint_list",
 		TEXT: "＜ヒント一覧＞\\n",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 9 * 5,
@@ -123,7 +122,7 @@ var PANEL_WEAPON_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE
 	},
 	ANSWER_BUTTON: {
-		NAME: MODE.WEAPON_QUIZ + "_answer_button",
+		NAME: "answer_button",
 		TEXT: "回答する",
 		FONT_SIZE: 24,
 		CENTERX: CANVAS_WIDTH / 8 * 7,
@@ -144,7 +143,7 @@ var PANEL_WEAPON_QUIZ = {
  */
 var PANEL_SELECT_WEAPON = {
 	SELECT_FRAME: {
-		NAME: MODE.WEAPON_QUIZ + "_select_frame",
+		NAME: "select_frame",
 		TEXT: "武器を選択してください。",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 2,
@@ -156,7 +155,7 @@ var PANEL_SELECT_WEAPON = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE
 	},
 	CANCEL: {
-		NAME: MODE.WEAPON_QUIZ + "_cancel",
+		NAME: "cancel",
 		TEXT: "Ｘ",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 2 + CANVAS_WIDTH / 8 * 7 / 2 - 50 / 2,
@@ -172,7 +171,7 @@ var PANEL_SELECT_WEAPON = {
 	},
 	WEAPON: {
 		NUMX: 12,
-		NAME: MODE.WEAPON_QUIZ + "_weapon",
+		NAME: "weapon",
 		CENTERX: CANVAS_WIDTH / 2 - CANVAS_WIDTH / 8 * 7 / 2 + 100,
 		CENTERY: CANVAS_HEIGHT / 2 - CANVAS_HEIGHT / 8 * 7 / 2 + 150,
 		SCALEX: 130,
@@ -193,7 +192,7 @@ var PANEL_SELECT_WEAPON = {
  */
 var PANEL_WEAPON_QUIZ_RESULT = {
 	CORRECT_IMAGE: {
-		NAME: MODE.WEAPON_QUIZ_RESULT + "_correct_image",
+		NAME: "correct_image",
 		CENTERX: CANVAS_WIDTH / 16 * 3,
 		CENTERY: 250,
 		SCALEX: 500,
@@ -202,7 +201,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		IMAGE: "http://" + location.host + "/images/correct.png"
 	},
 	WEAPON_IMAGE: {
-		NAME: MODE.WEAPON_QUIZ_RESULT + "_weapon_image",
+		NAME: "weapon_image",
 		CENTERX: CANVAS_WIDTH / 16 * 5,
 		CENTERY: 400,
 		SCALEX: 500,
@@ -211,7 +210,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		IMAGE: "http://" + location.host + "/images/"
 	},
 	HINT_ALL: {
-		NAME: MODE.WEAPON_QUIZ_RESULT + "_answer_text",
+		NAME: "answer_text",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 4 * 3,
 		CENTERY: 400,
@@ -222,7 +221,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE
 	},
 	MORE_BUTTON: {
-		NAME: MODE.WEAPON_QUIZ_RESULT + "_more_button",
+		NAME: "more_button",
 		TEXT: "もう一度挑戦する",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 4 * 1,
@@ -237,7 +236,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
 	},
 	RETURN_BUTTON: {
-		NAME: MODE.WEAPON_QUIZ_RESULT + "_return_button",
+		NAME: "return_button",
 		TEXT: "モード選択画面へ戻る",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 4 * 3,
@@ -252,3 +251,103 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
 	},
 }
+
+/**
+ * 通常クイズ画面
+ */
+var PANEL_NORMAL_QUIZ = {
+	QUESTION_TEXT: {
+		NAME: "question_text",
+		FONT_SIZE: 32,
+		CENTERX: CANVAS_WIDTH / 2,
+		CENTERY: 135,
+		SCALEX: CANVAS_WIDTH - 200,
+		SCALEY: 250,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: "#548235",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE
+	},
+	QUESTION_BUTTON: {
+		NUM: 4,
+		NAME: "question",
+		FONT_SIZE: 24,
+		CENTERX: CANVAS_WIDTH / 5,
+		CENTERY: 350,
+		SPACEY: 180,
+		SCALEX: 500,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000",
+			DISABLE: "#AA4444",
+			HILIGHT: "#FFC000"
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY
+	},
+	QUESTION_IMAGE: {
+		NAME: "question_image",
+		CENTERX: 1050,
+		CENTERY: 570,
+		SCALEX: 550,
+		SCALEY: 550,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+	},
+	ANSWER_IMAGE: {
+		NAME: "answer_image",
+		CENTERX: 1600,
+		CENTERY: 520,
+		SCALEX: 550,
+		SCALEY: 550,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+	},
+	CORRECT_IMAGE: {
+		NAME: "correct_image",
+		CENTERX: 600,
+		CENTERY: 510,
+		SCALEX: 700,
+		SCALEY: 700,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		IMAGE: "http://" + location.host + "/images/correct.png"
+	},
+	INCORRECT_IMAGE: {
+		NAME: "incorrect_image",
+		CENTERX: 600,
+		CENTERY: 510,
+		SCALEX: 700,
+		SCALEY: 700,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		IMAGE: "http://" + location.host + "/images/incorrect.png"
+	},
+	MORE_BUTTON: {
+		NAME: "more_button",
+		TEXT: "次の問題へ",
+		FONT_SIZE: 32,
+		CENTERX: 1100,
+		CENTERY: 900,
+		SCALEX: 400,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000",
+			DISABLE: "#555555"
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
+	},
+	RETURN_BUTTON: {
+		NAME: "return_button",
+		TEXT: "モード選択画面へ戻る",
+		FONT_SIZE: 32,
+		CENTERX: 1600,
+		CENTERY: 900,
+		SCALEX: 400,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000",
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
+	},
+};
