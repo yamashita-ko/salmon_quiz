@@ -1,8 +1,8 @@
-package com.example.demo.bean;
+package com.example.demo.dto;
 
 import java.io.Serializable;
 
-public class WeaponMasterBean implements Serializable {
+public class WeaponMasterDto implements Serializable {
 	private Integer id;
 	private String name;
 	private String type;

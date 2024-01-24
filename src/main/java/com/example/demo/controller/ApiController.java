@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.bean.QuizMasterBean;
-import com.example.demo.bean.WeaponMasterBean;
-import com.example.demo.bean.WeaponQuestionBean;
 import com.example.demo.dao.QuizMasterDao;
 import com.example.demo.dao.WeaponMasterDao;
 import com.example.demo.dao.WeaponQuestionDao;
+import com.example.demo.dto.QuizMasterDto;
+import com.example.demo.dto.WeaponMasterDto;
+import com.example.demo.dto.WeaponQuestionDto;
 
 @RestController
 public class ApiController {
@@ -25,23 +25,23 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/weapon", method = RequestMethod.GET)
-	public List<WeaponMasterBean> getWeaponAll() {
+	public List<WeaponMasterDto> getWeaponAll() {
     	WeaponMasterDao weaponMasterDao = new WeaponMasterDao();
-    	List<WeaponMasterBean> weaponMaster = weaponMasterDao.findAll();
+    	List<WeaponMasterDto> weaponMaster = weaponMasterDao.findAll();
     	return weaponMaster;
     }
 
     @RequestMapping(value = "/weapon-question", method = RequestMethod.GET)
-	public List<WeaponQuestionBean> getWeaponQuestionAll() {
+	public List<WeaponQuestionDto> getWeaponQuestionAll() {
     	WeaponQuestionDao weaponQuestionDao = new WeaponQuestionDao();
-    	List<WeaponQuestionBean> weaponQuestion = weaponQuestionDao.findAll();
+    	List<WeaponQuestionDto> weaponQuestion = weaponQuestionDao.findAll();
     	return weaponQuestion;
     }
 
     @RequestMapping(value = "/quiz", method = RequestMethod.GET)
-	public List<QuizMasterBean> getQuiz(@RequestParam(name = "type")Integer type) {
+	public List<QuizMasterDto> getQuiz(@RequestParam(name = "type")Integer type) {
     	QuizMasterDao quizMasterDao = new QuizMasterDao();
-    	List<QuizMasterBean> quizMaster = quizMasterDao.find(type);
+    	List<QuizMasterDto> quizMaster = quizMasterDao.find(type);
     	return quizMaster;
     }
 }
