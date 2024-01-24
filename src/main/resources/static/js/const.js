@@ -23,7 +23,7 @@ var MODE = {
 	WEAPON_QUIZ_RESULT: "mode_weapon_quiz_result",
 	ENEMY_QUIZ: "mode_enemy_quiz",
 	NORMAL_QUIZ: "mode_normal_quiz",
-	REPORT: "mode_report"
+	DIFFICULT_QUIZ: "mode_difficult_quiz"
 };
 
 /**
@@ -48,19 +48,19 @@ var PANEL_MODE_SELECT = {
 			WEAPON_QUIZ: 1,
 			ENEMY_QUIZ: 2,
 			OTHER_QUIZ: 3,
-			REPORT: 4
+			DIFFICULT_QUIZ: 4
 		},
 		NAME: [
-			MODE.WEAPON_QUIZ,
-			MODE.ENEMY_QUIZ,
-			MODE.NORMAL_QUIZ,
-			MODE.REPORT
+			"mode_weapon_quiz",
+			"mode_enemy_quiz",
+			"mode_normal_quiz",
+			"mode_difficult_quiz"
 		],
 		TEXT: [
 			"武器クイズ",
 			"シャケクイズ",
 			"通常クイズ",
-			"報告"
+			"高難易度クイズ"
 		],
 		FONT_SIZE: 24,
 		CENTERX: CANVAS_WIDTH / 6,
@@ -351,33 +351,3 @@ var PANEL_NORMAL_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
 	},
 };
-
-/**
- * 報告画面
- */
-var PANEL_REPORT = {
-	INPUT_TEXT: {
-		TEXT: "ここに報告内容を記載してください。",
-		POSITION: "absolute",
-		FONT_SIZE: "32px",
-		TOP: "30%",
-		LEFT: "20%",
-		WIDTH: "60%",
-		HEIGHT: "40%"
-	},
-	SEND_BUTTON: {
-		NAME: "report_send_button",
-		TEXT: "記載した内容を報告する",
-		FONT_SIZE: 32,
-		CENTERX: CANVAS_WIDTH / 2,
-		CENTERY: 1000,
-		SCALEX: 600,
-		SCALEY: 100,
-		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: {
-			NORMAL: "#0070C0",
-			HOVER: "#FFC000"
-		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY
-	},
-}

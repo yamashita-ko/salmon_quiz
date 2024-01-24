@@ -18,7 +18,6 @@
   </head>
   <body>
     <canvas id="canvas" width="1920" height="1080"></canvas>
-    <div id="inputObj"></div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.2/sprintf.min.js"></script>
 	<script src="js/calc.js"></script>
 	<script src="js/const.js"></script>
@@ -26,7 +25,6 @@
 	<script src="js/weapon_quiz.js"></script>
 	<script src="js/weapon_quiz_result.js"></script>
 	<script src="js/normal_quiz.js"></script>
-	<script src="js/report.js"></script>
 	<script>
 		var CANVAS_MARGIN_TOP = 100;
 		var canvas = document.getElementById("canvas");
@@ -67,8 +65,6 @@
 					clickWeaponQuizResult(window.objCols[i]);
 				} else if(window.mode == MODE.NORMAL_QUIZ) {
 					clickNormalQuiz(window.objCols[i]);
-				} else if(window.mode == MODE.REPORT) {
-					clickReport(window.objCols[i]);
 				}
 				break;
 			}
@@ -109,9 +105,7 @@
 				func = () => {
 					createNormalQuiz();
 				}
-			} else if(mode == MODE.REPORT) {
-				func = createReport;
-			} 
+			}
 	        initDraw(func);
 		}
 		
