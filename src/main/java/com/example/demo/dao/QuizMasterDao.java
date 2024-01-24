@@ -5,13 +5,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.demo.dto.QuizMasterDto;
+import com.example.demo.bean.QuizMasterBean;
 
 public class QuizMasterDao extends BaseDao{
-	public List<QuizMasterDto> find(Integer type) {
+	public List<QuizMasterBean> find(Integer type) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		List<QuizMasterDto> result = new ArrayList<>();
+		List<QuizMasterBean> result = new ArrayList<>();
 		String typeCommand = "";
 		if(type != null && type != 0) {
 			typeCommand = " WHERE quiz_master.type = " + type;
@@ -22,17 +22,17 @@ public class QuizMasterDao extends BaseDao{
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
-				QuizMasterDto dto = new QuizMasterDto();
-				dto.setId(rs.getInt("id"));
-				dto.setType(rs.getInt("type"));
-				dto.setLevel(rs.getInt("level"));
-				dto.setQuestion(rs.getString("question"));
-				dto.setAnswerList(rs.getString("answer_list"));
-				dto.setAnswerIndex(rs.getInt("answer_index"));
-				dto.setNote(rs.getString("note"));
-				dto.setQuestionImage(rs.getString("question_image"));
-				dto.setAnswerImage(rs.getString("answer_image"));
-				result.add(dto);
+				QuizMasterBean bean = new QuizMasterBean();
+				bean.setId(rs.getInt("id"));
+				bean.setType(rs.getInt("type"));
+				bean.setLevel(rs.getInt("level"));
+				bean.setQuestion(rs.getString("question"));
+				bean.setAnswerList(rs.getString("answer_list"));
+				bean.setAnswerIndex(rs.getInt("answer_index"));
+				bean.setNote(rs.getString("note"));
+				bean.setQuestionImage(rs.getString("question_image"));
+				bean.setAnswerImage(rs.getString("answer_image"));
+				result.add(bean);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

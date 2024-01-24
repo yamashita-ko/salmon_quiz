@@ -1,8 +1,8 @@
-package com.example.demo.dto;
+package com.example.demo.bean;
 
 import java.io.Serializable;
 
-public class QuizMasterDto implements Serializable {
+public class QuizMasterBean implements Serializable {
 	private Integer id;
 	private Integer type;
 	private Integer level;
