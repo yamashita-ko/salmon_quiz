@@ -51,7 +51,7 @@ var PANEL_MODE_SELECT = {
 		INDEX: {
 			WEAPON_QUIZ: 1,
 			ENEMY_QUIZ: 2,
-			OTHER_QUIZ: 3,
+			NORMAL_QUIZ: 3,
 			DIFFICULT_QUIZ: 4
 		},
 		NAME: [
@@ -80,6 +80,78 @@ var PANEL_MODE_SELECT = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
 		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
 		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+	},
+	SELECT_FRAME: {
+		NAME: "select_frame",
+		TEXT: "出題する内容・難易度を選択してください。\\nグレーボタンになったものは出題されません。",
+		FONT_SIZE: 32,
+		CENTERX: 1200,
+		CENTERY: 625,
+		SCALEX: 1300,
+		SCALEY: 750,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: "#0070C0",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		GROUP: MODE.NORMAL_QUIZ
+	},
+	TYPE_BUTTON: {
+		INDEX: {
+			NORMAL: 1,
+			Trivia: 2
+		},
+		NAME: [
+			"type_button_normal",
+			"type_button_trivia"
+		],
+		TEXT: [
+			"通常",
+			"雑学"
+		],
+		FONT_SIZE: 50,
+		CENTERX: 720,
+		SPACEX: 300,
+		CENTERY: 430,
+		SCALEX: 300,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.HILIGHT,
+		IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
+		HILIGHT_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		GROUP: MODE.NORMAL_QUIZ
+	},
+	LEVEL_BUTTON: {
+		NUM: 10,
+		NUMX: 5,
+		NAME: "level_button",
+		TEXT: "",
+		FONT_SIZE: 50,
+		CENTERX: 630,
+		SPACEX: 120,
+		CENTERY: 570,
+		SPACEY: 120,
+		SCALEX: 120,
+		SCALEY: 120,
+		TEXT_COLOR: "#FFFFFF",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.HILIGHT,
+		IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
+		HILIGHT_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		GROUP: MODE.NORMAL_QUIZ
+	},
+	NORMAL_QUIZ_START_BUTTON: {
+		NAME: "normal_quiz_start_button",
+		TEXT: "上記内容で開始する",
+		FONT_SIZE: 50,
+		CENTERX: 870,
+		CENTERY: 830,
+		SCALEX: 600,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
+		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
+		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		GROUP: MODE.NORMAL_QUIZ
 	},
 	YOKODUNA_IMAGE: {
 		NAME: "yokoduna_image",

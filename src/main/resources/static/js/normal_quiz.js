@@ -1,11 +1,14 @@
 
 var normalQuizData = {};
+var normalQuizType = [];
+var normalQuizLevel = [];
 
 /**
  * 通常クイズ画面　初期設定
  */
 function initNormalQuiz() {
 	window.objCols = [];
+	normalQuizData = {};
 }
 
 /**
@@ -13,6 +16,9 @@ function initNormalQuiz() {
  */
 function uninitNormalQuiz() {
 	window.objCols = [];
+	normalQuizData = {};
+	normalQuizType = [];
+	normalQuizLevel = [];
 }
 
 /**
@@ -24,6 +30,8 @@ async function createNormalQuiz() {
         return res.json();
     })
     
+    window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
+    window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     window.normalQuizData.map((obj) => {
     	// 選択肢を配列にする
 		obj.answerList = obj.answerList.split(", ");
@@ -33,13 +41,15 @@ async function createNormalQuiz() {
 			obj.answerImage = IMAGE_PATH + obj.answerImage;
 	});
     // 乱数でソート
-	const cloneArray = JSON.parse(JSON.stringify(window.normalQuizData));
-	window.normalQuizData = cloneArray.reduce((prev, cur, idx) => {
-		let rand = getRandomInt(idx + 1);
-		cloneArray[idx] = cloneArray[rand];
-		cloneArray[rand] = cur;
-		return cloneArray;
-	});
+    if(window.normalQuizData.length > 1) {
+		const cloneArray = JSON.parse(JSON.stringify(window.normalQuizData));
+		window.normalQuizData = cloneArray.reduce((prev, cur, idx) => {
+			let rand = getRandomInt(idx + 1);
+			cloneArray[idx] = cloneArray[rand];
+			cloneArray[rand] = cur;
+			return cloneArray;
+		});
+	}
 	window.objCols = drawNormalQuiz();
 }
 
@@ -60,7 +70,7 @@ function drawNormalQuiz() {
 
 	let questionTextObj = createObject(QUESTION_TEXT);
 	let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
-	questionTextObj.text = "問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].question;
+	questionTextObj.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].question;
 	cols.push(drawText(questionTextObj));
 	for(let i = 0; i < window.normalQuizData[0].answerList.length; i++) {
 		let questionButtonObj = createObject(QUESTION_BUTTON);
@@ -97,7 +107,7 @@ function clickNormalQuiz(obj) {
 		window.objCols.map((o) => {
 			if(o.name == PANEL_NORMAL_QUIZ.QUESTION_TEXT.NAME) {
 				let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
-				o.text = "問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].note;
+				o.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].note;
 				drawText(o);
 			} else if(o.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
 				if(window.normalQuizData.length <= 1)
@@ -140,7 +150,6 @@ function clickNormalQuiz(obj) {
 	} else if(obj.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
 		console.log("次へ");
 		let func = () => {
-			initNormalQuiz();
 			window.objCols = drawNormalQuiz();
 		}
 		initDraw(func);
