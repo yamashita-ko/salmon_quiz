@@ -166,6 +166,9 @@
 			obj.bgColor = data.BG_COLOR;
 			obj.state = data.STATE;
 			obj.image = data.IMAGE;
+			obj.hoverImage = data.HOVER_IMAGE;
+			obj.disableImage = data.DISABLE_IMAGE;
+			obj.hilightImage = data.HILIGHT_IMAGE;
 			return obj;
 		}
 		
@@ -175,9 +178,66 @@
 		 * @return {Object} 判定用オブジェクト
 		 */
 		function drawText(obj) {
-			const TEXT_MARGIN = 20;
 			if((obj.state & TEXT_STATE.ENABLE) == false)
-				return obj;
+				return obj
+			ctxDrawBG(obj);
+			var func = () => {
+				ctxDrawText(obj);
+			};
+ 			if(obj.state & TEXT_STATE.IMAGE) {
+				ctxDrawImage(obj, func);
+			} else {
+				func();
+			}
+			
+			return obj;
+		}
+		
+		function ctxDrawImage(obj, func) {
+ 			if(obj.state & TEXT_STATE.IMAGE) {
+				const chara = new Image();
+				if(obj.state & TEXT_STATE.HILIGHT && obj.hilightImage) {
+					chara.src = obj.hilightImage;
+				} else if((obj.state & TEXT_STATE.ACTIVE) == false && obj.disableImage) {
+					chara.src = obj.disableImage;
+				} else if(obj.state & TEXT_STATE.HOVER && obj.hoverImage) {
+					chara.src = obj.hoverImage;
+				} else {
+					chara.src = obj.image;
+				}
+				chara.onload = () => {
+					let imgStartX = obj.centerX - obj.scaleX / 2;
+					let imgStartY = obj.centerY - obj.scaleY / 2;
+					let imgScaleX = obj.scaleX;
+					let imgScaleY = obj.scaleY;
+ 					if(obj.state & TEXT_STATE.ADJUST_ASPECT) {
+						if(chara.naturalWidth / chara.naturalHeight < imgScaleX / imgScaleY) {
+							// Y軸を最大にしてX軸を減らす
+							let oldScaleX = imgScaleX;
+							imgScaleX = chara.naturalWidth * (imgScaleY / chara.naturalHeight);
+							imgStartX = imgStartX + (oldScaleX - imgScaleX) / 2;
+						} else {
+							// X軸を最大にしてY軸を減らす
+							let oldScaleY = imgScaleY;
+							imgScaleY = chara.naturalHeight * (imgScaleX / chara.naturalWidth);
+							imgStartY = imgStartY + (oldScaleY - imgScaleY) / 2;
+						}
+					}
+					const PADDING = 10;
+					if(obj.state & TEXT_STATE.IMAGE_CENTERX) {
+						imgStartX += PADDING;
+						imgScaleX -= PADDING * 2;
+					}
+					if(obj.state & TEXT_STATE.IMAGE_CENTERY) {
+						imgStartY += PADDING;
+						imgScaleY -= PADDING * 2;
+					}
+					window.ctx.drawImage(chara, imgStartX, imgStartY, imgScaleX, imgScaleY);
+					func();
+				}
+			}
+		}
+		function ctxDrawBG(obj) {
 			if((obj.state & TEXT_STATE.BG_DISABLE) == false) {
 	 			// テキスト背景描画
 				window.ctx.beginPath();
@@ -196,7 +256,9 @@
 				window.ctx.stroke();
 				window.ctx.closePath();
 			}
-			// テキスト描画
+		}
+		function ctxDrawText(obj) {
+			const TEXT_MARGIN = 20;
 			// \nを区切り文字として分割
  			if(obj.state & TEXT_STATE.IS_TEXT) {
 		  		window.ctx.font = obj.fontSize + "px Arial";
@@ -206,51 +268,20 @@
 				for(let i = 0; i < texts.length; i++) {
 		 			var textPosX = obj.centerX - obj.scaleX / 2 + TEXT_MARGIN;
 		 			var textPosY = obj.centerY - obj.scaleY / 2 + textHeight + TEXT_MARGIN;
-		 			textPosY += (textHeight + TEXT_MARGIN) * i;
 		 			if(obj.state & TEXT_STATE.CENTERX) {
 						let textWidth = window.ctx.measureText(texts[i]).width;
 		 				textPosX = obj.centerX - textWidth / 2;
 		 			}
 		 			if(obj.state & TEXT_STATE.CENTERY) {
-		 				textPosY = obj.centerY + textHeight / 2;
-		 			}
+		 				//textPosY = obj.centerY + textHeight / 2;
+		 				textPosY = obj.centerY - (textHeight) * texts.length / 2 + (textHeight) * (i + 1);
+		 			} else {
+		 				textPosY += (textHeight + TEXT_MARGIN) * i;
+					 }
 					window.ctx.fillStyle = obj.textColor;
 					window.ctx.fillText(texts[i], textPosX, textPosY);
 				}
 			}
-			// 画像描画
- 			if(obj.state & TEXT_STATE.IMAGE) {
-				const chara = new Image();
-				chara.src = obj.image;
-				chara.onload = () => {
-					let imgStartX = obj.centerX - obj.scaleX / 2;
-					let imgStartY = obj.centerY - obj.scaleY / 2;
-					let imgScaleX = obj.scaleX;
-					let imgScaleY = obj.scaleY;
-					if(chara.naturalWidth > chara.naturalHeight) {
-						let oldScaleY = imgScaleY;
-						imgScaleY = imgScaleY * (chara.naturalHeight / chara.naturalWidth);
-						imgStartY = imgStartY + (oldScaleY - imgScaleY) / 2;
-					} else {
-						let oldScaleX = imgScaleX;
-						imgScaleX = imgScaleX * (chara.naturalWidth / chara.naturalHeight);
-						imgStartX = imgStartX + (oldScaleX - imgScaleX) / 2;
-					}
-					const PADDING = 10;
-					if(obj.state & TEXT_STATE.CENTERX) {
-						imgStartX += PADDING;
-						imgScaleX -= PADDING * 2;
-					}
-					if(obj.state & TEXT_STATE.CENTERY) {
-						imgStartY += PADDING;
-						imgScaleY -= PADDING * 2;
-					}
-					console.log(chara.naturalWidth);
-					console.log(chara.naturalHeight);
-					window.ctx.drawImage(chara, imgStartX, imgStartY, imgScaleX, imgScaleY);
-				}
-			}
-			return obj;
 		}
     </script>
   </body>

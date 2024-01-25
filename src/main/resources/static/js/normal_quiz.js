@@ -96,7 +96,8 @@ function clickNormalQuiz(obj) {
 		
 		window.objCols.map((o) => {
 			if(o.name == PANEL_NORMAL_QUIZ.QUESTION_TEXT.NAME) {
-				o.text = window.normalQuizData[0].note;
+				let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
+				o.text = "問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].note;
 				drawText(o);
 			} else if(o.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
 				if(window.normalQuizData.length <= 1)

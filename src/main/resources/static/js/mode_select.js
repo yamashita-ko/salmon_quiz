@@ -29,6 +29,13 @@ function drawModeSelect() {
 	var cols = [];
 	var COMMENT = PANEL_MODE_SELECT.COMMENT;
 	var BUTTON = PANEL_MODE_SELECT.BUTTON;
+	var YOKODUNA_IMAGE = PANEL_MODE_SELECT.YOKODUNA_IMAGE;
+	var KUMASAN_IMAGE = PANEL_MODE_SELECT.KUMASAN_IMAGE;
+	var IKA_IMAGE = PANEL_MODE_SELECT.IKA_IMAGE;
+	var TITLE_LOGO_IMAGE = PANEL_MODE_SELECT.TITLE_LOGO_IMAGE;
+	var ZAKOSYAKE_IMAGE = PANEL_MODE_SELECT.ZAKOSYAKE_IMAGE;
+	var INK_IMAGE = PANEL_MODE_SELECT.INK_IMAGE;
+	var IKURA_IMAGE = PANEL_MODE_SELECT.IKURA_IMAGE;
 
 	cols.push(drawText(createObject(COMMENT)));
 	for(let i = 0; i < BUTTON.NUM; i++) {
@@ -36,8 +43,16 @@ function drawModeSelect() {
 		buttonCol.name = BUTTON.NAME[i];
 		buttonCol.text = BUTTON.TEXT[i];
 		buttonCol.centerY = BUTTON.CENTERY + BUTTON.SPACEY * i;
+		buttonCol.hoverImage = BUTTON.HOVER_IMAGE;
 		cols.push(drawText(buttonCol));
 	}
+	cols.push(drawText(createObject(YOKODUNA_IMAGE)));
+	cols.push(drawText(createObject(KUMASAN_IMAGE)));
+	cols.push(drawText(createObject(IKA_IMAGE)));
+	cols.push(drawText(createObject(TITLE_LOGO_IMAGE)));
+	cols.push(drawText(createObject(ZAKOSYAKE_IMAGE)));
+	cols.push(drawText(createObject(INK_IMAGE)));
+	cols.push(drawText(createObject(IKURA_IMAGE)));
 	return cols;
 }
 
