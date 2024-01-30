@@ -32,6 +32,13 @@ async function createNormalQuiz() {
     
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
+    
+    
+    let num = forRange(41, 60);
+    window.normalQuizData = window.normalQuizData.filter((obj) => num.includes(obj.id));
+    
+    
+    
     window.normalQuizData.map((obj) => {
     	// 選択肢を配列にする
 		obj.answerList = obj.answerList.split(", ");
@@ -107,7 +114,7 @@ function clickNormalQuiz(obj) {
 		window.objCols.map((o) => {
 			if(o.name == PANEL_NORMAL_QUIZ.QUESTION_TEXT.NAME) {
 				let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
-				o.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].note;
+				o.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n【解説】" + window.normalQuizData[0].note;
 				drawText(o);
 			} else if(o.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
 				if(window.normalQuizData.length <= 1)

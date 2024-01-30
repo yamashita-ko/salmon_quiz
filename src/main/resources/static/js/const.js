@@ -17,7 +17,8 @@ var TEXT_STATE = {
     HILIGHT: 1<<9,
     ADJUST_ASPECT: 1<<10,
     IMAGE_CENTERX: 1<<11,
-    IMAGE_CENTERY: 1<<11
+    IMAGE_CENTERY: 1<<11,
+    BG_KADOMARU: 1<<12
 };
 
 var MODE = {
@@ -42,9 +43,9 @@ var PANEL_MODE_SELECT = {
 		SCALEX: CANVAS_WIDTH - 200,
 		SCALEY: 200,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: "#548235",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		BG_COLOR: "#2D8013",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
+		//IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
 	BUTTON: {
 		NUM: 4,
@@ -62,9 +63,9 @@ var PANEL_MODE_SELECT = {
 		],
 		TEXT: [
 			"武器クイズ",
-			"シャケクイズ",
+			"シャケクイズ(仮)",
 			"通常クイズ",
-			"高難易度クイズ"
+			"高難易度クイズ(仮)"
 		],
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 6,
@@ -78,7 +79,7 @@ var PANEL_MODE_SELECT = {
 			HOVER: "#FFC000"
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
+		IMAGE: "http://" + location.host + "/images/button/button_green_1.png",
 		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
 	},
 	SELECT_FRAME: {
@@ -90,9 +91,9 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 1300,
 		SCALEY: 750,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: "#0070C0",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		BG_COLOR: "#2D8013",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.BG_KADOMARU,
+		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 		GROUP: MODE.NORMAL_QUIZ
 	},
 	TYPE_BUTTON: {
@@ -230,19 +231,19 @@ var PANEL_WEAPON_QUIZ = {
 		SCALEX: CANVAS_WIDTH - 200,
 		SCALEY: 250,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: "#548235",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		BG_COLOR: "#2D8013",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
+		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
 	QUESTION_SELECT_BUTTON: {
 		NUM: 4,
 		NAME: "question",
-		FONT_SIZE: 24,
+		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 5,
 		CENTERY: 350,
 		SPACEY: 180,
 		SCALEX: 500,
-		SCALEY: 100,
+		SCALEY: 150,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
 			NORMAL: "#0070C0",
@@ -263,9 +264,9 @@ var PANEL_WEAPON_QUIZ = {
 		SCALEX: 700,
 		SCALEY: 600,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: "#548235",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		BG_COLOR: "#2D8013",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
+		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
 	ANSWER_BUTTON: {
 		NAME: "answer_button",
@@ -330,7 +331,7 @@ var PANEL_SELECT_WEAPON = {
 			HOVER: "#BBBB35",
 			DISABLE: "#555555"
 		},
-		STATE: TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE_CENTERX | TEXT_STATE.IMAGE_CENTERY | TEXT_STATE.IMAGE,
+		STATE: TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE,
 		IMAGE: "http://" + location.host + "/images/"
 	}
 };
@@ -341,19 +342,19 @@ var PANEL_SELECT_WEAPON = {
 var PANEL_WEAPON_QUIZ_RESULT = {
 	CORRECT_IMAGE: {
 		NAME: "correct_image",
-		CENTERX: CANVAS_WIDTH / 16 * 3,
-		CENTERY: 250,
-		SCALEX: 500,
-		SCALEY: 500,
+		CENTERX: 500,
+		CENTERY: 400,
+		SCALEX: 1000,
+		SCALEY: 1000,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/correct.png"
+		IMAGE: "http://" + location.host + "/images/akuse/correct.png"
 	},
 	WEAPON_IMAGE: {
 		NAME: "weapon_image",
-		CENTERX: CANVAS_WIDTH / 16 * 5,
-		CENTERY: 400,
-		SCALEX: 500,
-		SCALEY: 500,
+		CENTERX: CANVAS_WIDTH / 2,
+		CENTERY: 900,
+		SCALEX: 300,
+		SCALEY: 300,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
 		IMAGE: "http://" + location.host + "/images/"
 	},
@@ -365,9 +366,9 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		SCALEX: 700,
 		SCALEY: 600,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: "#548235",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		BG_COLOR: "#2D8013",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
+		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
 	MORE_BUTTON: {
 		NAME: "more_button",
@@ -417,9 +418,9 @@ var PANEL_NORMAL_QUIZ = {
 		SCALEX: CANVAS_WIDTH - 200,
 		SCALEY: 280,
 		TEXT_COLOR: "#FFFFFF",
-		BG_COLOR: "#548235",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/text_green_1.png",
+		BG_COLOR: "#2D8013",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
+		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
 	QUESTION_BUTTON: {
 		NUM: 4,
@@ -440,7 +441,7 @@ var PANEL_NORMAL_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
 		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
 		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
-		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_red_1.png",
+		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
 		HILIGHT_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
 	},
 	QUESTION_IMAGE: {
@@ -461,21 +462,21 @@ var PANEL_NORMAL_QUIZ = {
 	},
 	CORRECT_IMAGE: {
 		NAME: "correct_image",
-		CENTERX: 1000,
-		CENTERY: 510,
-		SCALEX: 700,
-		SCALEY: 700,
+		CENTERX: CANVAS_WIDTH / 2,
+		CENTERY: 600,
+		SCALEX: 800,
+		SCALEY: 800,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/correct.png"
+		IMAGE: "http://" + location.host + "/images/akuse/correct.png"
 	},
 	INCORRECT_IMAGE: {
 		NAME: "incorrect_image",
-		CENTERX: 1000,
-		CENTERY: 510,
-		SCALEX: 700,
-		SCALEY: 700,
+		CENTERX: CANVAS_WIDTH / 2,
+		CENTERY: 650,
+		SCALEX: 800,
+		SCALEY: 800,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/incorrect.png"
+		IMAGE: "http://" + location.host + "/images/akuse/incorrect.png"
 	},
 	MORE_BUTTON: {
 		NAME: "more_button",

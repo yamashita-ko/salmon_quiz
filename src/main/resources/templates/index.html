@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>サモランクイズ</title>
-    <link href="images/weapon/spshu.webp" rel="icon">
+    <link href="images/weapon/spshu.png" rel="icon">
     <style>
       * {
         padding: 0;
@@ -242,7 +242,11 @@
 			if((obj.state & TEXT_STATE.BG_DISABLE) == false) {
 	 			// テキスト背景描画
 				window.ctx.beginPath();
-				window.ctx.rect(obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY)
+				if(obj.state & TEXT_STATE.BG_KADOMARU) {
+					createRoundRectPath(window.ctx, obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY, 20)
+				} else {
+					window.ctx.rect(obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY)
+				}
 				if(typeof obj.bgColor === 'object') {
 					let bgColor = obj.state & TEXT_STATE.HOVER ? obj.bgColor.HOVER : obj.bgColor.NORMAL;
 					bgColor = obj.state & TEXT_STATE.ACTIVE ? bgColor : obj.bgColor.DISABLE;
@@ -262,7 +266,7 @@
 			const TEXT_MARGIN = 20;
 			// \nを区切り文字として分割
  			if(obj.state & TEXT_STATE.IS_TEXT) {
-		  		window.ctx.font = obj.fontSize + "px Arial";
+		  		window.ctx.font = "bold " + obj.fontSize + "px Arial";
 				const measure = window.ctx.measureText(obj.text);
 				const textHeight= measure.actualBoundingBoxAscent + measure.actualBoundingBoxDescent;
 				const texts = obj.text.split("\\n");
@@ -281,6 +285,9 @@
 					 }
 					window.ctx.fillStyle = obj.textColor;
 					window.ctx.fillText(texts[i], textPosX, textPosY);
+					//window.ctx.strokeStyle = '#000000';
+					//window.ctx.lineWidth = 1.5;
+					//window.ctx.strokeText(texts[i], textPosX, textPosY);
 				}
 			}
 		}

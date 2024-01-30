@@ -134,4 +134,9 @@ function clickModeSelect(obj) {
 		uninitModeSelect();
 		changeMode(modeName);
 	}
+	if(obj.name == MODE.WEAPON_QUIZ) {
+		let modeName = MODE.WEAPON_QUIZ;
+		uninitModeSelect();
+		changeMode(modeName);
+	}
 }
