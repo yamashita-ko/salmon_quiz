@@ -17,6 +17,26 @@ function forRange(a, z) {
 }
 
 /**
+ * 配列シャッフル
+ * @param {number} array 配列
+ * @return {number[]} シャッフルされた配列
+ * @example
+ * alert(arrayShuffle([1, 2, 3, 4, 5]));
+ * // [1, 4, 5, 2, 3]
+ */
+function arrayShuffle(array) {
+ 	for(let i = (array.length - 1); 0 < i; i--){
+		// 0〜(i+1)の範囲で値を取得
+		let r = Math.floor(Math.random() * (i + 1));
+		// 要素の並び替えを実行
+		let tmp = array[i];
+		array[i] = array[r];
+		array[r] = tmp;
+	}
+	return array;
+}
+
+/**
  * 乱数作成
  * @param {number} max 乱数の範囲
  * @return {number} 乱数

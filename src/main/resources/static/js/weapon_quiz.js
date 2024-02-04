@@ -65,6 +65,7 @@ function drawWeaponQuiz(weaponData) {
 	var QUESTION_BUTTON = PANEL_WEAPON_QUIZ.QUESTION_SELECT_BUTTON;
 	var HINT_LIST = PANEL_WEAPON_QUIZ.HINT_LIST;
 	var ANSWER_BUTTON = PANEL_WEAPON_QUIZ.ANSWER_BUTTON;
+	var HINT_IMAGE = PANEL_WEAPON_QUIZ.HINT_IMAGE;
 	var SELECT_FRAME = PANEL_SELECT_WEAPON.SELECT_FRAME;
 	var CANCEL_BUTTON = PANEL_SELECT_WEAPON.CANCEL;
 	var WEAPON_BUTTON = PANEL_SELECT_WEAPON.WEAPON;
@@ -88,6 +89,8 @@ function drawWeaponQuiz(weaponData) {
 	hintListObj.text = HINT_LIST.TEXT + window.answerAllText;
 	cols.push(drawText(hintListObj));
 	cols.push(drawText(createObject(ANSWER_BUTTON)));
+	cols.push(drawText(createObject(HINT_IMAGE)));
+	
 	cols.push(drawText(createObject(SELECT_FRAME)));
 	cols.push(drawText(createObject(CANCEL_BUTTON)));
 	

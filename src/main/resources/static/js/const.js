@@ -18,8 +18,11 @@ var TEXT_STATE = {
     ADJUST_ASPECT: 1<<10,
     IMAGE_CENTERX: 1<<11,
     IMAGE_CENTERY: 1<<11,
-    BG_KADOMARU: 1<<12
+    BG_KADOMARU: 1<<12,
+    BOLD: 1<<13
 };
+var FONT_IKA = 'ikamodoki1_0';
+var FONT_DEFAULT = 'MS PGothic';
 
 var MODE = {
 	SELECT: "mode_select",
@@ -36,7 +39,7 @@ var MODE = {
 var PANEL_MODE_SELECT = {
 	COMMENT: {
 		NAME: "text",
-		TEXT: "遊びたいモードを選択してください。",
+		TEXT: "あそびたいモードをセンタクしてね。",
 		FONT_SIZE: 48,
 		CENTERX: CANVAS_WIDTH / 2,
 		CENTERY: 110,
@@ -45,27 +48,21 @@ var PANEL_MODE_SELECT = {
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
-		//IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
+		FONT: FONT_IKA
 	},
 	BUTTON: {
-		NUM: 4,
+		NUM: 2,
 		INDEX: {
 			WEAPON_QUIZ: 1,
-			ENEMY_QUIZ: 2,
-			NORMAL_QUIZ: 3,
-			DIFFICULT_QUIZ: 4
+			NORMAL_QUIZ: 2,
 		},
 		NAME: [
 			"mode_weapon_quiz",
-			"mode_enemy_quiz",
 			"mode_normal_quiz",
-			"mode_difficult_quiz"
 		],
 		TEXT: [
-			"武器クイズ",
-			"シャケクイズ(仮)",
-			"通常クイズ",
-			"高難易度クイズ(仮)"
+			"ブキクイズ",
+			"ツウジョウクイズ",
 		],
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 6,
@@ -78,9 +75,10 @@ var PANEL_MODE_SELECT = {
 			NORMAL: "#0070C0",
 			HOVER: "#FFC000"
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 		IMAGE: "http://" + location.host + "/images/button/button_green_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		FONT: FONT_IKA
 	},
 	SELECT_FRAME: {
 		NAME: "select_frame",
@@ -93,7 +91,6 @@ var PANEL_MODE_SELECT = {
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 		GROUP: MODE.NORMAL_QUIZ
 	},
 	TYPE_BUTTON: {
@@ -116,7 +113,12 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 300,
 		SCALEY: 100,
 		TEXT_COLOR: "#FFFFFF",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.HILIGHT,
+		BG_COLOR: {
+			NORMAL: "#555555",
+			HOVER: "#555555",
+			HILIGHT: "#FFC000"
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU | TEXT_STATE.HILIGHT,
 		IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
 		HILIGHT_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
 		GROUP: MODE.NORMAL_QUIZ
@@ -259,9 +261,9 @@ var PANEL_WEAPON_QUIZ = {
 		NAME: "hint_list",
 		TEXT: "＜ヒント一覧＞\\n",
 		FONT_SIZE: 32,
-		CENTERX: CANVAS_WIDTH / 9 * 5,
+		CENTERX: 950,
 		CENTERY: 600,
-		SCALEX: 700,
+		SCALEX: 600,
 		SCALEY: 600,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
@@ -273,7 +275,7 @@ var PANEL_WEAPON_QUIZ = {
 		TEXT: "回答する",
 		FONT_SIZE: 24,
 		CENTERX: CANVAS_WIDTH / 8 * 7,
-		CENTERY: 900,
+		CENTERY: 960,
 		SCALEX: 150,
 		SCALEY: 100,
 		TEXT_COLOR: "#FFFFFF",
@@ -284,6 +286,15 @@ var PANEL_WEAPON_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
 		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
 		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+	},
+	HINT_IMAGE: {
+		NAME: "hint_image",
+		CENTERX: 1580,
+		CENTERY: 600,
+		SCALEX: 600,
+		SCALEY: 600,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
+		IMAGE: "http://" + location.host + "/images/" + "weapon_range_image.png"
 	}
 };
 
@@ -412,20 +423,20 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 var PANEL_NORMAL_QUIZ = {
 	QUESTION_TEXT: {
 		NAME: "question_text",
-		FONT_SIZE: 32,
+		FONT_SIZE: 40,
 		CENTERX: CANVAS_WIDTH / 2,
 		CENTERY: 150,
 		SCALEX: CANVAS_WIDTH - 200,
 		SCALEY: 280,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU | TEXT_STATE.BOLD,
 		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
 	QUESTION_BUTTON: {
 		NUM: 4,
 		NAME: "question_button",
-		FONT_SIZE: 24,
+		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 5,
 		CENTERY: 380,
 		SPACEY: 180,
@@ -438,7 +449,7 @@ var PANEL_NORMAL_QUIZ = {
 			DISABLE: "#AA4444",
 			HILIGHT: "#FFC000"
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.BOLD,
 		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
 		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
 		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
@@ -450,7 +461,7 @@ var PANEL_NORMAL_QUIZ = {
 		CENTERY: 570,
 		SCALEX: 550,
 		SCALEY: 550,
-		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.ADJUST_ASPECT,
 	},
 	ANSWER_IMAGE: {
 		NAME: "answer_image",
@@ -458,7 +469,7 @@ var PANEL_NORMAL_QUIZ = {
 		CENTERY: 520,
 		SCALEX: 550,
 		SCALEY: 550,
-		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.ADJUST_ASPECT,
 	},
 	CORRECT_IMAGE: {
 		NAME: "correct_image",

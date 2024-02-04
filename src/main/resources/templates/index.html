@@ -14,6 +14,10 @@
         display: block;
         margin: 0 auto;
       }
+      @font-face {
+        font-family: 'ikamodoki1_0';   /* フォント名 */
+        src: url('font/ikamodoki1_0.ttf') format('truetype');   /* フォントファイル */
+      }
     </style>
   </head>
   <body>
@@ -36,10 +40,15 @@
 		 * 初回起動
 		 */
 		window.onload = () => {
-		    var func = () => {
-				changeMode(MODE.SELECT);
-			}
-		    initDraw(func);
+			var fonts = document.fonts;
+			var p = fonts.load('10px ' + FONT_IKA);
+			p.then(() => {
+				var func = () => {
+					changeMode(MODE.SELECT);
+				}
+			    initDraw(func);
+			});
+		    
 		}
 		
 		/**
@@ -170,6 +179,7 @@
 			obj.disableImage = data.DISABLE_IMAGE;
 			obj.hilightImage = data.HILIGHT_IMAGE;
 			obj.group = data.GROUP;
+			obj.font = data.FONT ? data.FONT : FONT_DEFAULT;
 			return obj;
 		}
 		
@@ -263,10 +273,14 @@
 			}
 		}
 		function ctxDrawText(obj) {
-			const TEXT_MARGIN = 20;
+			const TEXT_MARGIN = 10;
 			// \nを区切り文字として分割
- 			if(obj.state & TEXT_STATE.IS_TEXT) {
-		  		window.ctx.font = "bold " + obj.fontSize + "px Arial";
+			if(obj.state & TEXT_STATE.IS_TEXT) {
+				let font = "";
+				font += obj.bold ? "bold " : "";
+				font += obj.fontSize + "px ";
+				font += obj.font ? obj.font + " " : FONT_DEFAULT;
+				window.ctx.font = font;
 				const measure = window.ctx.measureText(obj.text);
 				const textHeight= measure.actualBoundingBoxAscent + measure.actualBoundingBoxDescent;
 				const texts = obj.text.split("\\n");

@@ -33,11 +33,8 @@ async function createNormalQuiz() {
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     
-    
-    let num = forRange(41, 60);
+    let num = forRange(21, 40);
     window.normalQuizData = window.normalQuizData.filter((obj) => num.includes(obj.id));
-    
-    
     
     window.normalQuizData.map((obj) => {
     	// 選択肢を配列にする
@@ -77,13 +74,17 @@ function drawNormalQuiz() {
 
 	let questionTextObj = createObject(QUESTION_TEXT);
 	let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
-	questionTextObj.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n" + window.normalQuizData[0].question;
+	questionTextObj.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "\\n" + window.normalQuizData[0].question;
 	cols.push(drawText(questionTextObj));
+	
+	// 連番を作りシャッフル 選択肢をシャッフルするためのＹ座標の計算に使用
+	let buttonOrder = forRange(0, window.normalQuizData[0].answerList.length - 1);
+	buttonOrder = arrayShuffle(buttonOrder);
 	for(let i = 0; i < window.normalQuizData[0].answerList.length; i++) {
 		let questionButtonObj = createObject(QUESTION_BUTTON);
 		questionButtonObj.name = QUESTION_BUTTON.NAME + (Number(i) + 1);
 		questionButtonObj.text = window.normalQuizData[0].answerList[i];
-		questionButtonObj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * i;
+		questionButtonObj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * buttonOrder[i];
 		cols.push(drawText(questionButtonObj));
 	}
 	if(window.normalQuizData[0].questionImage) {
@@ -117,9 +118,8 @@ function clickNormalQuiz(obj) {
 				o.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "　難易度：" + window.normalQuizData[0].level + "/10\\n【解説】" + window.normalQuizData[0].note;
 				drawText(o);
 			} else if(o.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
-				if(window.normalQuizData.length <= 1)
-					o.state &= ~TEXT_STATE.ACTIVE;
-				o.state ^= TEXT_STATE.ENABLE;
+				if(window.normalQuizData.length > 1)
+					o.state ^= TEXT_STATE.ENABLE;
 				drawText(o);
 			}else if(o.name == PANEL_NORMAL_QUIZ.RETURN_BUTTON.NAME) {
 				o.state ^= TEXT_STATE.ENABLE;
@@ -151,9 +151,6 @@ function clickNormalQuiz(obj) {
 		if(window.normalQuizData.length == 0) {
 			window.objCols.state &= ~TEXT_STATE.ACTIVE;
 		}
-			
-		//uninitNoramlQuiz();
-		//changeMode(MODE.SELECT);
 	} else if(obj.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
 		console.log("次へ");
 		let func = () => {
