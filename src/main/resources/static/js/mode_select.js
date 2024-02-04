@@ -41,6 +41,7 @@ function drawModeSelect() {
 	var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
 	var NORMAL_QUIZ_START_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON;
 
+	cols.push(drawText(createObject(BACKGROUND_IMAGE)));
 	cols.push(drawText(createObject(COMMENT)));
 	for(let i = 0; i < BUTTON.NUM; i++) {
 		var buttonCol = createObject(BUTTON);

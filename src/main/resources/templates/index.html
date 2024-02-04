@@ -35,6 +35,8 @@
 		var ctx = canvas.getContext("2d");
 		var objCols = [];
 		var mode;
+		var updateImages = [];
+		var background;
 		
 		/**
 		 * 初回起動
@@ -43,10 +45,7 @@
 			var fonts = document.fonts;
 			var p = fonts.load('10px ' + FONT_IKA);
 			p.then(() => {
-				var func = () => {
-					changeMode(MODE.SELECT);
-				}
-			    initDraw(func);
+				changeMode(MODE.SELECT);
 			});
 		    
 		}
@@ -174,13 +173,70 @@
 			obj.textColor = data.TEXT_COLOR;
 			obj.bgColor = data.BG_COLOR;
 			obj.state = data.STATE;
-			obj.image = data.IMAGE;
-			obj.hoverImage = data.HOVER_IMAGE;
-			obj.disableImage = data.DISABLE_IMAGE;
-			obj.hilightImage = data.HILIGHT_IMAGE;
+			obj.defaultState = data.STATE;
+			obj.imagePath = data.IMAGE;
+			obj.hoverImagePath = data.HOVER_IMAGE;
+			obj.disableImagePath = data.DISABLE_IMAGE;
+			obj.hilightImagePath = data.HILIGHT_IMAGE;
+			obj.image = createImage(data.IMAGE);
+			if(data.IMAGE_OBJ)
+				obj.image = data.IMAGE_OBJ;
+			obj.hoverImage = createImage(data.HOVER_IMAGE);
+			obj.disableImage = createImage(data.DISABLE_IMAGE);
+			obj.hilightImage = createImage(data.HILIGHT_IMAGE);
 			obj.group = data.GROUP;
 			obj.font = data.FONT ? data.FONT : FONT_DEFAULT;
 			return obj;
+		}
+		
+		/**
+		 * objColsをすべて描画
+		 */
+		function drawAll() {
+			window.objCols.map((o) => {
+				drawText(o);
+			});
+		}
+		
+		/**
+		 * objColsのstateをすべてリセット
+		 */
+		function resetState() {
+			window.objCols.map((o) => {
+				o.state = o.defaultState;
+			});
+		}
+		
+		/**
+		 * Imageオブジェクト生成
+		 * @param {String} path パス
+		 * @return {Object} Imageオブジェクト
+		 */
+		function createImage(path) {
+			if(!path) return;
+			const image = new Image();
+			image.src = path;
+			updateImages.push(image);
+			return image;
+		}
+		
+		function ckeckLoadImageExecFunc(func) {
+			if(updateImages.length == 0) func();
+			let loadCount = 0;
+			for(let i = 0; i < updateImages.length; i++) {
+				updateImages[i].onload = () => {
+					loadCount++;
+					if(loadCount == updateImages.length) {
+						func();
+					}
+				}
+				updateImages[i].onerror = () => {
+					loadCount++;
+					if(loadCount == updateImages.length) {
+						func();
+					}
+				}
+			}
 		}
 		
 		/**
@@ -206,46 +262,46 @@
 		
 		function ctxDrawImage(obj, func) {
  			if(obj.state & TEXT_STATE.IMAGE) {
-				const chara = new Image();
+				let chara;
 				if(obj.state & TEXT_STATE.HILIGHT && obj.hilightImage) {
-					chara.src = obj.hilightImage;
+					chara = obj.hilightImage;
 				} else if((obj.state & TEXT_STATE.ACTIVE) == false && obj.disableImage) {
-					chara.src = obj.disableImage;
+					chara = obj.disableImage;
 				} else if(obj.state & TEXT_STATE.HOVER && obj.hoverImage) {
-					chara.src = obj.hoverImage;
+					chara = obj.hoverImage;
 				} else {
-					chara.src = obj.image;
+					chara = obj.image;
 				}
-				chara.onload = () => {
-					let imgStartX = obj.centerX - obj.scaleX / 2;
-					let imgStartY = obj.centerY - obj.scaleY / 2;
-					let imgScaleX = obj.scaleX;
-					let imgScaleY = obj.scaleY;
- 					if(obj.state & TEXT_STATE.ADJUST_ASPECT) {
-						if(chara.naturalWidth / chara.naturalHeight < imgScaleX / imgScaleY) {
-							// Y軸を最大にしてX軸を減らす
-							let oldScaleX = imgScaleX;
-							imgScaleX = chara.naturalWidth * (imgScaleY / chara.naturalHeight);
-							imgStartX = imgStartX + (oldScaleX - imgScaleX) / 2;
-						} else {
-							// X軸を最大にしてY軸を減らす
-							let oldScaleY = imgScaleY;
-							imgScaleY = chara.naturalHeight * (imgScaleX / chara.naturalWidth);
-							imgStartY = imgStartY + (oldScaleY - imgScaleY) / 2;
-						}
+				if(!chara) return;
+				let imgStartX = obj.centerX - obj.scaleX / 2;
+				let imgStartY = obj.centerY - obj.scaleY / 2;
+				let imgScaleX = obj.scaleX;
+				let imgScaleY = obj.scaleY;
+				if(obj.state & TEXT_STATE.ADJUST_ASPECT) {
+					if(chara.naturalWidth / chara.naturalHeight < imgScaleX / imgScaleY) {
+						// Y軸を最大にしてX軸を減らす
+						let oldScaleX = imgScaleX;
+						imgScaleX = chara.naturalWidth * (imgScaleY / chara.naturalHeight);
+						imgStartX = imgStartX + (oldScaleX - imgScaleX) / 2;
+					} else {
+						// X軸を最大にしてY軸を減らす
+						let oldScaleY = imgScaleY;
+						imgScaleY = chara.naturalHeight * (imgScaleX / chara.naturalWidth);
+						imgStartY = imgStartY + (oldScaleY - imgScaleY) / 2;
 					}
-					const PADDING = 10;
-					if(obj.state & TEXT_STATE.IMAGE_CENTERX) {
-						imgStartX += PADDING;
-						imgScaleX -= PADDING * 2;
-					}
-					if(obj.state & TEXT_STATE.IMAGE_CENTERY) {
-						imgStartY += PADDING;
-						imgScaleY -= PADDING * 2;
-					}
-					window.ctx.drawImage(chara, imgStartX, imgStartY, imgScaleX, imgScaleY);
-					func();
 				}
+				const PADDING = 10;
+				if(obj.state & TEXT_STATE.IMAGE_CENTERX) {
+					imgStartX += PADDING;
+					imgScaleX -= PADDING * 2;
+				}
+				if(obj.state & TEXT_STATE.IMAGE_CENTERY) {
+					imgStartY += PADDING;
+					imgScaleY -= PADDING * 2;
+				}
+				window.ctx.drawImage(chara, imgStartX, imgStartY, imgScaleX, imgScaleY);
+				func();
+				
 			}
 		}
 		function ctxDrawBG(obj) {

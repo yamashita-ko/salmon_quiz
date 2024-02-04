@@ -9,6 +9,7 @@ var normalQuizLevel = [];
 function initNormalQuiz() {
 	window.objCols = [];
 	normalQuizData = {};
+	updateImages = [];
 }
 
 /**
@@ -33,7 +34,7 @@ async function createNormalQuiz() {
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     
-    let num = forRange(21, 40);
+    let num = forRange(1, 5);
     window.normalQuizData = window.normalQuizData.filter((obj) => num.includes(obj.id));
     
     window.normalQuizData.map((obj) => {
@@ -54,14 +55,15 @@ async function createNormalQuiz() {
 			return cloneArray;
 		});
 	}
-	window.objCols = drawNormalQuiz();
+	window.objCols = createObjectNormalQuiz();
+	ckeckLoadImageExecFunc(drawAll);
 }
 
 /**
  * 通常クイズ画面　初期表示・判定設定
  * @return {Object[]} 当たり判定用オブジェクトリスト
  */
-function drawNormalQuiz() {
+function createObjectNormalQuiz() {
 	var cols = [];
 	var QUESTION_TEXT = PANEL_NORMAL_QUIZ.QUESTION_TEXT;
 	var QUESTION_BUTTON = PANEL_NORMAL_QUIZ.QUESTION_BUTTON;
@@ -71,37 +73,70 @@ function drawNormalQuiz() {
 	var INCORRECT_IMAGE = PANEL_NORMAL_QUIZ.INCORRECT_IMAGE;
 	var MORE_BUTTON = PANEL_NORMAL_QUIZ.MORE_BUTTON;
 	var RETURN_BUTTON = PANEL_NORMAL_QUIZ.RETURN_BUTTON;
+	
+	cols.push(createObject(BACKGROUND_IMAGE));
+	
+	let quizDiff = createNormalQuizDiff();
 
 	let questionTextObj = createObject(QUESTION_TEXT);
-	let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
-	questionTextObj.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "\\n" + window.normalQuizData[0].question;
-	cols.push(drawText(questionTextObj));
-	
-	// 連番を作りシャッフル 選択肢をシャッフルするためのＹ座標の計算に使用
-	let buttonOrder = forRange(0, window.normalQuizData[0].answerList.length - 1);
-	buttonOrder = arrayShuffle(buttonOrder);
+	questionTextObj.text = quizDiff.text;
+	cols.push(questionTextObj);
 	for(let i = 0; i < window.normalQuizData[0].answerList.length; i++) {
 		let questionButtonObj = createObject(QUESTION_BUTTON);
-		questionButtonObj.name = QUESTION_BUTTON.NAME + (Number(i) + 1);
-		questionButtonObj.text = window.normalQuizData[0].answerList[i];
-		questionButtonObj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * buttonOrder[i];
-		cols.push(drawText(questionButtonObj));
+		questionButtonObj.name = quizDiff.buttons[i].name;
+		questionButtonObj.text = quizDiff.buttons[i].text;
+		questionButtonObj.centerY = quizDiff.buttons[i].centerY;
+		cols.push(questionButtonObj);
 	}
-	if(window.normalQuizData[0].questionImage) {
-		let questionImageObj = createObject(QUESTION_IMAGE);
-		questionImageObj.image = window.normalQuizData[0].questionImage;
-		cols.push(drawText(questionImageObj));
-	}
-	if(window.normalQuizData[0].answerImage) {
-		let answerImageObj = createObject(ANSWER_IMAGE);
-		answerImageObj.image = window.normalQuizData[0].answerImage;
-		cols.push(drawText(answerImageObj));
-	}
-	cols.push(drawText(createObject(CORRECT_IMAGE)));
-	cols.push(drawText(createObject(INCORRECT_IMAGE)));
-	cols.push(drawText(createObject(MORE_BUTTON)));
-	cols.push(drawText(createObject(RETURN_BUTTON)));
+	let questionImageObj = createObject(QUESTION_IMAGE);
+	questionImageObj.image = createImage(quizDiff.questionImage);
+	cols.push(questionImageObj);
+	let answerImageObj = createObject(ANSWER_IMAGE);
+	answerImageObj.image = createImage(quizDiff.answerImage);
+	cols.push(answerImageObj);
+	cols.push(createObject(CORRECT_IMAGE));
+	cols.push(createObject(INCORRECT_IMAGE));
+	cols.push(createObject(MORE_BUTTON));
+	cols.push(createObject(RETURN_BUTTON));
 	return cols;
+}
+
+function updateObjectNormalQuiz() {
+	var QUESTION_TEXT = PANEL_NORMAL_QUIZ.QUESTION_TEXT;
+	var QUESTION_BUTTON = PANEL_NORMAL_QUIZ.QUESTION_BUTTON;
+	var QUESTION_IMAGE = PANEL_NORMAL_QUIZ.QUESTION_IMAGE;
+	var ANSWER_IMAGE = PANEL_NORMAL_QUIZ.ANSWER_IMAGE;
+	let quizDiff = createNormalQuizDiff();
+	window.objCols.find((o) => o.name == QUESTION_TEXT.NAME).text =  quizDiff.text;
+	for(let i = 0; i < window.normalQuizData[0].answerList.length; i++) {
+		window.objCols.find((o) => o.name == QUESTION_BUTTON.NAME + (Number(i) + 1)).text =  quizDiff.buttons[i].text;
+	}
+	window.objCols.find((o) => o.name == QUESTION_IMAGE.NAME).image = createImage(quizDiff.questionImage);
+	window.objCols.find((o) => o.name == ANSWER_IMAGE.NAME).image = createImage(quizDiff.answerImage);
+}
+
+
+function createNormalQuizDiff() {
+	let ret = {};
+	let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
+	ret.text = "残り問題数：" + window.normalQuizData.length + "　問題番号：" + window.normalQuizData[0].id + "　種別：" + type + "\\n" + window.normalQuizData[0].question;
+	
+	var QUESTION_BUTTON = PANEL_NORMAL_QUIZ.QUESTION_BUTTON;
+	// 連番を作りシャッフル 選択肢をシャッフルするためのＹ座標の計算に使用
+	let buttonOrder = forRange(0, window.normalQuizData[0].answerList.length - 1);
+	let buttons = [];
+	buttonOrder = arrayShuffle(buttonOrder);
+	for(let i = 0; i < window.normalQuizData[0].answerList.length; i++) {
+		let obj = {};
+		obj.name = QUESTION_BUTTON.NAME + (Number(i) + 1);
+		obj.text = window.normalQuizData[0].answerList[i];
+		obj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * buttonOrder[i];
+		buttons.push(obj);
+	}
+	ret.buttons = buttons;
+	ret.questionImage = window.normalQuizData[0].questionImage;
+	ret.answerImage = window.normalQuizData[0].answerImage;
+	return ret;
 }
 
 /**
@@ -152,9 +187,12 @@ function clickNormalQuiz(obj) {
 			window.objCols.state &= ~TEXT_STATE.ACTIVE;
 		}
 	} else if(obj.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
-		console.log("次へ");
 		let func = () => {
-			window.objCols = drawNormalQuiz();
+			updateImages = [];
+			updateObjectNormalQuiz();
+			clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+			resetState();
+			ckeckLoadImageExecFunc(drawAll);
 		}
 		initDraw(func);
 	} else if(obj.name == PANEL_NORMAL_QUIZ.RETURN_BUTTON.NAME) {
