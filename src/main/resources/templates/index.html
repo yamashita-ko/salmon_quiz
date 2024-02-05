@@ -137,6 +137,7 @@
 					}
 					continue;
 				}
+				weaponQuizHoverAction(window.objCols[i]);
 				if(window.objCols[i].state & TEXT_STATE.HOVER){
 					continue;
 				}
@@ -186,6 +187,8 @@
 			obj.hilightImage = createImage(data.HILIGHT_IMAGE);
 			obj.group = data.GROUP;
 			obj.font = data.FONT ? data.FONT : FONT_DEFAULT;
+			obj.margin = data.MARGIN;
+			obj.lineHeight = data.LINE_HEIGHT;
 			return obj;
 		}
 		
@@ -264,6 +267,28 @@
 			return obj;
 		}
 		
+		/**
+		 * オブジェクトのグループをフィルタリングした後に関数実行
+		 * @param {String} group グループ名
+		 * @param {Function} func 関数(第一引数にオブジェクトを選択させること)
+		 */
+		function filterGroupExecFunc(group, func) {
+			let objs = window.objCols.filter((o) => o.group == group);
+			objs.map((o) => {
+				func(o);
+			})
+		}
+		
+		/**
+		 * オブジェクトの名前を検索した後に関数実行
+		 * @param {String} group グループ名
+		 * @param {Function} func 関数(第一引数にオブジェクトを選択させること)
+		 */
+		function findNameExecFunc(name, func) {
+			let obj = window.objCols.find((o) => o.name == name);
+			func(obj);
+		}
+		
 		function ctxDrawImage(obj, func) {
  			if(obj.state & TEXT_STATE.IMAGE) {
 				let chara;
@@ -327,13 +352,22 @@
 				}
 				window.ctx.fill();
 				// エッジ描画
-				window.ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
-				window.ctx.stroke();
-				window.ctx.closePath();
+				if((obj.state & TEXT_STATE.BG_NO_BORDER) == false) {
+					window.ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
+					window.ctx.stroke();
+					window.ctx.closePath();
+				}
 			}
 		}
 		function ctxDrawText(obj) {
-			const TEXT_MARGIN = 10;
+			if(!obj.text)
+				return;
+			let TEXT_MARGIN = 10;
+			let LINE_HEIGHT = 10;
+			if(obj.margin)
+				TEXT_MARGIN = obj.margin;
+			if(obj.lineHeight)
+				LINE_HEIGHT = obj.lineHeight;
 			// \nを区切り文字として分割
 			if(obj.state & TEXT_STATE.IS_TEXT) {
 				let font = "";
@@ -355,7 +389,7 @@
 		 				//textPosY = obj.centerY + textHeight / 2;
 		 				textPosY = obj.centerY - (textHeight) * texts.length / 2 + (textHeight) * (i + 1);
 		 			} else {
-		 				textPosY += (textHeight + TEXT_MARGIN) * i;
+		 				textPosY += (textHeight + LINE_HEIGHT) * i;
 					 }
 					window.ctx.fillStyle = obj.textColor;
 					window.ctx.fillText(texts[i], textPosX, textPosY);

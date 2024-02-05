@@ -4,7 +4,6 @@
  */
 function initModeSelect() {
 	window.objCols = [];
-	window.updateImages = [];
 }
 
 /**
@@ -12,7 +11,6 @@ function initModeSelect() {
  */
 function uninitModeSelect() {
 	window.objCols = [];
-	window.updateImages = [];
 }
 
 /**
@@ -30,33 +28,28 @@ function createModeSelect() {
  */
 function createObjectModeSelect() {
 	var cols = [];
-	var COMMENT = PANEL_MODE_SELECT.COMMENT;
 	var BUTTON = PANEL_MODE_SELECT.BUTTON;
 	var YOKODUNA_IMAGE = PANEL_MODE_SELECT.YOKODUNA_IMAGE;
-	var KUMASAN_IMAGE = PANEL_MODE_SELECT.KUMASAN_IMAGE;
 	var IKA2_IMAGE = PANEL_MODE_SELECT.IKA2_IMAGE;
 	var IKA3_IMAGE = PANEL_MODE_SELECT.IKA3_IMAGE;
+	var IKA4_IMAGE = PANEL_MODE_SELECT.IKA4_IMAGE;
 	var TITLE_LOGO_IMAGE = PANEL_MODE_SELECT.TITLE_LOGO_IMAGE;
-	var ZAKOSYAKE_IMAGE = PANEL_MODE_SELECT.ZAKOSYAKE_IMAGE;
-	var INK_IMAGE = PANEL_MODE_SELECT.INK_IMAGE;
 	var IKURA_IMAGE = PANEL_MODE_SELECT.IKURA_IMAGE;
-	var SELECT_FRAME = PANEL_MODE_SELECT.SELECT_FRAME;
+	var SELECT_FRAME = PANEL_MODE_SELECT.NORMAL_QUIZ_SELECT_FRAME;
 	var TYPE_BUTTON = PANEL_MODE_SELECT.TYPE_BUTTON;
 	var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
 	var NORMAL_QUIZ_START_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON;
+	var NORMAL_QUIZ_CANCEL_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_CANCEL_BUTTON;
 
 	var diff = createModeSelectDiff();
 	cols.push(createObject(BACKGROUND_IMAGE));
+	
+	// メイン画面用
 	cols.push(createObject(YOKODUNA_IMAGE));
-	//cols.push(createObject(KUMASAN_IMAGE));
 	cols.push(createObject(IKA2_IMAGE));
 	cols.push(createObject(IKA3_IMAGE));
 	cols.push(createObject(TITLE_LOGO_IMAGE));
-	//cols.push(createObject(ZAKOSYAKE_IMAGE));
-	cols.push(createObject(INK_IMAGE));
-	//cols.push(createObject(IKURA_IMAGE));
-	cols.push(createObject(SELECT_FRAME));
-	cols.push(createObject(COMMENT));
+	cols.push(createObject(IKURA_IMAGE));
 	for(let i = 0; i < BUTTON.NUM; i++) {
 		let obj = createObject(BUTTON);
 		obj.name = diff.buttons[i].name;
@@ -65,6 +58,8 @@ function createObjectModeSelect() {
 		obj.hoverImage = diff.buttons[i].image;
 		cols.push(obj);
 	}
+	// ツウジョウクイズ選択時画面用
+	cols.push(createObject(SELECT_FRAME));
 	for(let i = 0; i < Object.keys(TYPE_BUTTON.INDEX).length; i++) {
 		let obj = createObject(TYPE_BUTTON);
 		obj.name = diff.typeButtons[i].name;
@@ -83,6 +78,8 @@ function createObjectModeSelect() {
 		cols.push(obj);
 	}
 	cols.push(createObject(NORMAL_QUIZ_START_BUTTON));
+	cols.push(createObject(NORMAL_QUIZ_CANCEL_BUTTON));
+	cols.push(createObject(IKA4_IMAGE));
 	return cols;
 }
 
@@ -132,12 +129,15 @@ function createModeSelectDiff() {
 function clickModeSelect(obj) {
 	if(obj.name == PANEL_MODE_SELECT.BUTTON.NAME[PANEL_MODE_SELECT.BUTTON.INDEX.NORMAL_QUIZ - 1]) {
 		// 通常クイズの設定画面を表示
-		window.objCols.map((o) => {
-			if(o.group == MODE.NORMAL_QUIZ) {
-				o.state |= TEXT_STATE.ENABLE;
-				drawText(o);
-			}
-		});
+		filterGroupExecFunc(MODE.NORMAL_QUIZ, (o) => o.state |= TEXT_STATE.ENABLE);
+		filterGroupExecFunc(MODE.SELECT, (o) => o.state &= ~TEXT_STATE.ACTIVE);
+		drawAll();
+	}
+	if(obj.name == PANEL_MODE_SELECT.NORMAL_QUIZ_CANCEL_BUTTON.NAME) {
+		// 通常クイズの設定画面を閉じる
+		filterGroupExecFunc(MODE.NORMAL_QUIZ, (o) => o.state &= ~TEXT_STATE.ENABLE);
+		filterGroupExecFunc(MODE.SELECT, (o) => o.state |= TEXT_STATE.ACTIVE);
+		drawAll();
 	}
 	for(let i = 0; i < Object.keys(PANEL_MODE_SELECT.TYPE_BUTTON.INDEX).length; i++) {
 		if(obj.name == PANEL_MODE_SELECT.TYPE_BUTTON.NAME[i]) {
@@ -151,21 +151,19 @@ function clickModeSelect(obj) {
 			drawText(obj);
 		}
 	}
-	window.objCols.map((o) => {
-		if(o.name == PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON.NAME) {
-			// 内容・難易度のいずれかがすべてグレーの場合は開始ボタンをグレーにする
-			if(o.state & TEXT_STATE.ACTIVE) {
-				if(Object.keys(window.objCols.filter((o2) => PANEL_MODE_SELECT.TYPE_BUTTON.NAME.includes(o2.name) && (o2.state & TEXT_STATE.HILIGHT))).length == 0 ||
-					Object.keys(window.objCols.filter((o2) => o2.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o2.state & TEXT_STATE.HILIGHT))).length == 0) {
-					o.state &= ~TEXT_STATE.ACTIVE;
-					drawText(o);
-				}
-			} else {
-				if(Object.keys(window.objCols.filter((o2) => PANEL_MODE_SELECT.TYPE_BUTTON.NAME.includes(o2.name) && (o2.state & TEXT_STATE.HILIGHT))).length > 0 &&
-					Object.keys(window.objCols.filter((o2) => o2.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o2.state & TEXT_STATE.HILIGHT))).length > 0) {
-					o.state |= TEXT_STATE.ACTIVE;
-					drawText(o);
-				}
+	findNameExecFunc(PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON.NAME, (o) => {
+		// 内容・難易度のいずれかがすべてグレーの場合は開始ボタンをグレーにする
+		if(o.state & TEXT_STATE.ACTIVE) {
+			if(Object.keys(window.objCols.filter((o2) => PANEL_MODE_SELECT.TYPE_BUTTON.NAME.includes(o2.name) && (o2.state & TEXT_STATE.HILIGHT))).length == 0 ||
+				Object.keys(window.objCols.filter((o2) => o2.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o2.state & TEXT_STATE.HILIGHT))).length == 0) {
+				o.state &= ~TEXT_STATE.ACTIVE;
+				drawText(o);
+			}
+		} else {
+			if(Object.keys(window.objCols.filter((o2) => PANEL_MODE_SELECT.TYPE_BUTTON.NAME.includes(o2.name) && (o2.state & TEXT_STATE.HILIGHT))).length > 0 &&
+				Object.keys(window.objCols.filter((o2) => o2.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o2.state & TEXT_STATE.HILIGHT))).length > 0) {
+				o.state |= TEXT_STATE.ACTIVE;
+				drawText(o);
 			}
 		}
 	})

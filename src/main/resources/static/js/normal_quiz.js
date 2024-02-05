@@ -9,7 +9,6 @@ var normalQuizLevel = [];
 function initNormalQuiz() {
 	window.objCols = [];
 	normalQuizData = {};
-	window.updateImages = [];
 }
 
 /**
@@ -20,7 +19,6 @@ function uninitNormalQuiz() {
 	normalQuizData = {};
 	normalQuizType = [];
 	normalQuizLevel = [];
-	window.updateImages = [];
 }
 
 /**
@@ -188,7 +186,6 @@ function clickNormalQuiz(obj) {
 			window.objCols.state &= ~TEXT_STATE.ACTIVE;
 		}
 	} else if(obj.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
-		window.updateImages = [];
 		updateObjectNormalQuiz();
 		clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
 		resetState();

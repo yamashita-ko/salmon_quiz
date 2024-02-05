@@ -17,7 +17,6 @@ function initWeaponQuiz() {
 	window.questionSelect = [];
 	window.questionAnswer = [];
 	window.answerAllText = "";
-	window.updateImages = [];
 }
 
 /**
@@ -32,7 +31,6 @@ function uninitWeaponQuiz() {
 	window.questionSelect = [];
 	window.questionAnswer = [];
 	window.answerAllText = "";
-	window.updateImages = [];
 }
 
 /**
@@ -51,6 +49,10 @@ async function createWeaponQuiz() {
                 return res.json();
             })
 		);
+		window.questionDataOrg.map((o) => {
+			if(o.image)
+				o.image = PANEL_WEAPON_QUIZ.HINT_IMAGE.IMAGE + o.image;
+		})
 	}
 	createWeaponQuizData();
 	window.objCols = createWeaponQuizObject(window.weaponData);
@@ -71,6 +73,7 @@ function createWeaponQuizObject(weaponData) {
 	var HINT_IMAGE = PANEL_WEAPON_QUIZ.HINT_IMAGE;
 	var SELECT_FRAME = PANEL_SELECT_WEAPON.SELECT_FRAME;
 	var CANCEL_BUTTON = PANEL_SELECT_WEAPON.CANCEL;
+	var WEAPON_NAME = PANEL_SELECT_WEAPON.WEAPON_NAME;
 	var WEAPON_BUTTON = PANEL_SELECT_WEAPON.WEAPON;
 	let diff = createWeaponQuizDiff();
 	;
@@ -91,10 +94,15 @@ function createWeaponQuizObject(weaponData) {
 	hintListObj.text = diff.hintListText;
 	cols.push(hintListObj);
 	cols.push(createObject(ANSWER_BUTTON));
-	cols.push(createObject(HINT_IMAGE));
+	let hintImageObj = createObject(HINT_IMAGE);
+	if(diff.image) {
+		hintImageObj.image = diff.image;
+	}
+	cols.push(hintImageObj);
 	
 	cols.push(createObject(SELECT_FRAME));
 	cols.push(createObject(CANCEL_BUTTON));
+	cols.push(createObject(WEAPON_NAME));
 	
 	for(let i = 0; i < weaponData.length; i++) {
 		let obj = createObject(WEAPON_BUTTON);
@@ -102,6 +110,7 @@ function createWeaponQuizObject(weaponData) {
 		obj.centerX = diff.weaponButtons[i].centerX;
 		obj.centerY = diff.weaponButtons[i].centerY;
 		obj.image = createImage(diff.weaponButtons[i].image);
+		obj.weaponName = diff.weaponButtons[i].weaponName;
 		cols.push(obj);
 	}
 	return cols;
@@ -126,6 +135,8 @@ function createWeaponQuizDiff() {
 	}
 	ret.questionButtons = questionButtons;
 	ret.hintListText = HINT_LIST.TEXT + window.answerAllText;
+	if(window.questionData[questionAnswer[questionAnswer.length - 1]].image) 
+		ret.image = createImage(window.questionData[questionAnswer[questionAnswer.length - 1]].image);
 	let weaponButtons = [];
 	for(let i = 0; i < weaponData.length; i++) {
 		let obj = {};
@@ -133,6 +144,7 @@ function createWeaponQuizDiff() {
 		obj.centerX = WEAPON_BUTTON.CENTERX + WEAPON_BUTTON.SCALEX * (i % WEAPON_BUTTON.NUMX);
 		obj.centerY = WEAPON_BUTTON.CENTERY + WEAPON_BUTTON.SCALEY * (Math.floor((i) / WEAPON_BUTTON.NUMX));
 		obj.image = WEAPON_BUTTON.IMAGE + weaponData[i].image;
+		obj.weaponName = weaponData[i].name;
 		weaponButtons.push(obj);
 	}
 	ret.weaponButtons = weaponButtons;
@@ -255,7 +267,6 @@ function clickWeaponQuiz(obj) {
 			// 両方の画面で使う要素はないのでenableを反転させる
 			o.state ^= TEXT_STATE.ENABLE;
 		});
-		window.updateImages = [];
 		drawAll();
 	} else if(obj.name.indexOf(PANEL_SELECT_WEAPON.WEAPON.NAME) != -1) {
 		if(window.weaponData[weaponAnswerIndex].id == obj.name.replace(PANEL_SELECT_WEAPON.WEAPON.NAME, "")) {
@@ -268,26 +279,35 @@ function clickWeaponQuiz(obj) {
 		}
 	} else {
 		// 質問ボタンクリック判定
-		let questionSelect_button_index = obj.name.slice(-1);
-		window.questionAnswer.push(questionSelect[questionSelect_button_index - 1]);
-		window.answerAllText += "\\n" + window.questionData[window.questionAnswer[window.questionAnswer.length - 1]].answer;
-		window.questionSelect[questionSelect_button_index - 1] = createQuestionSelect(window.questionData, window.questionAnswer, window.questionSelect);
-		obj.text = (window.questionSelect[questionSelect_button_index - 1] != -1) ? window.questionData[questionSelect[questionSelect_button_index - 1]].question : "";
-		if(window.questionSelect[questionSelect_button_index - 1] == -1)
+		let selectIndex = obj.name.slice(-1);	// 選択したボタンindex(上から何番目)
+		window.questionAnswer.push(questionSelect[selectIndex - 1]);
+		let selectAnswerIndex = window.questionAnswer[window.questionAnswer.length - 1];	// 選択した質問のindex
+		window.answerAllText += "\\n" + window.questionData[selectAnswerIndex].answer;
+		window.questionSelect[selectIndex - 1] = createQuestionSelect(window.questionData, window.questionAnswer, window.questionSelect);
+		obj.text = (window.questionSelect[selectIndex - 1] != -1) ? window.questionData[questionSelect[selectIndex - 1]].question : "";
+		if(window.questionSelect[selectIndex - 1] == -1)
 			obj.state &= ~TEXT_STATE.ACTIVE;
-		// ヒント・ヒント一覧・押したボタンをを更新
-		window.objCols.map((o) => {
-			if(o.name == PANEL_WEAPON_QUIZ.ANSWER_TEXT.NAME) {
-				let answer = questionData[questionAnswer[questionAnswer.length - 1]].answer
-				if(questionData[questionAnswer[questionAnswer.length - 1]].note)
-					answer += questionData[questionAnswer[questionAnswer.length - 1]].note;
-				o.text = answer;
-				drawText(o);
-			} else if(o.name == PANEL_WEAPON_QUIZ.HINT_LIST.NAME) {
-				o.text = PANEL_WEAPON_QUIZ.HINT_LIST.TEXT + window.answerAllText;
-				drawText(o);
-			}
+		
+		findNameExecFunc(PANEL_WEAPON_QUIZ.ANSWER_TEXT.NAME, (o) => {
+			let answer = questionData[selectAnswerIndex].answer
+			if(questionData[selectAnswerIndex].note)
+				answer += questionData[selectAnswerIndex].note;
+			o.text = answer;
 		});
-		drawText(obj);
+		findNameExecFunc(PANEL_WEAPON_QUIZ.HINT_LIST.NAME, (o) => o.text = PANEL_WEAPON_QUIZ.HINT_LIST.TEXT + window.answerAllText);
+		findNameExecFunc(PANEL_WEAPON_QUIZ.HINT_IMAGE.NAME, (o) => o.image = createImage(questionData[selectAnswerIndex].image));
+		drawAll();
+	}
+}
+
+function weaponQuizHoverAction(obj) {
+	if(obj.name.indexOf(PANEL_SELECT_WEAPON.WEAPON.NAME) != -1) {
+		findNameExecFunc(PANEL_SELECT_WEAPON.WEAPON_NAME.NAME, (o) => {
+			if(o.text == obj.weaponName)
+				return;
+			console.log(obj.weaponName)
+			o.text = obj.weaponName;
+			drawText(o);
+		})
 	}
 }

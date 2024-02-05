@@ -8,6 +8,7 @@ public class WeaponQuestionDto implements Serializable {
 	private String answer;
 	private String variable;
 	private String note;
+	private String image;
 	
 	public Integer getId() {
 		return id;
@@ -38,5 +39,11 @@ public class WeaponQuestionDto implements Serializable {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 }

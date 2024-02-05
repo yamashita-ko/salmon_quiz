@@ -25,6 +25,7 @@ public class WeaponQuestionDao extends BaseDao{
 				dto.setAnswer(rs.getString("answer"));
 				dto.setVariable(rs.getString("variable"));
 				dto.setNote(rs.getString("note"));
+				dto.setImage(rs.getString("image"));
 				result.add(dto);
 			}
 		} catch(Exception e) {

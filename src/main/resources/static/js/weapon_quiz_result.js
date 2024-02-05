@@ -4,7 +4,6 @@
  */
 function initWeaponQuizResult() {
 	window.objCols = [];
-	window.updateImages = [];
 }
 
 /**
@@ -12,7 +11,6 @@ function initWeaponQuizResult() {
  */
 function uninitWeaponQuizResult() {
 	window.objCols = [];
-	window.updateImages = [];
 }
 /**
  * 武器クイズリザルト画面作成
