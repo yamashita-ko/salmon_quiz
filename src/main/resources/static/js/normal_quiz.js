@@ -9,7 +9,7 @@ var normalQuizLevel = [];
 function initNormalQuiz() {
 	window.objCols = [];
 	normalQuizData = {};
-	updateImages = [];
+	window.updateImages = [];
 }
 
 /**
@@ -20,6 +20,7 @@ function uninitNormalQuiz() {
 	normalQuizData = {};
 	normalQuizType = [];
 	normalQuizLevel = [];
+	window.updateImages = [];
 }
 
 /**
@@ -56,7 +57,7 @@ async function createNormalQuiz() {
 		});
 	}
 	window.objCols = createObjectNormalQuiz();
-	ckeckLoadImageExecFunc(drawAll);
+	drawAll();
 }
 
 /**
@@ -187,19 +188,13 @@ function clickNormalQuiz(obj) {
 			window.objCols.state &= ~TEXT_STATE.ACTIVE;
 		}
 	} else if(obj.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
-		let func = () => {
-			updateImages = [];
-			updateObjectNormalQuiz();
-			clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
-			resetState();
-			ckeckLoadImageExecFunc(drawAll);
-		}
-		initDraw(func);
+		window.updateImages = [];
+		updateObjectNormalQuiz();
+		clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+		resetState();
+		drawAll();
 	} else if(obj.name == PANEL_NORMAL_QUIZ.RETURN_BUTTON.NAME) {
-		let func = () => {
-			uninitNormalQuiz();
-			changeMode(MODE.SELECT);
-		}
-		initDraw(func);
+		uninitNormalQuiz();
+		changeMode(MODE.SELECT);
 	}
 }

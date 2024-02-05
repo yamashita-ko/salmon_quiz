@@ -114,7 +114,7 @@
 					createNormalQuiz();
 				}
 			}
-	        initDraw(func);
+	        func();
 		}
 		
 		/**
@@ -133,7 +133,7 @@
 					if(window.objCols[i].state & TEXT_STATE.HOVER) {
 						// ボタン消灯
 						window.objCols[i].state &= ~TEXT_STATE.HOVER;
-						drawText(window.objCols[i]);
+						drawAll();
 					}
 					continue;
 				}
@@ -142,7 +142,7 @@
 				}
         		// ボタン点灯
 				window.objCols[i].state |= TEXT_STATE.HOVER;
-				drawText(window.objCols[i]);
+				drawAll();
 			}
 		}
 		
@@ -193,9 +193,12 @@
 		 * objColsをすべて描画
 		 */
 		function drawAll() {
-			window.objCols.map((o) => {
-				drawText(o);
-			});
+			let func = () => { 
+				window.objCols.map((o) => {
+					drawText(o);
+				});
+			}
+			ckeckLoadImageExecFunc(func);
 		}
 		
 		/**
@@ -214,28 +217,30 @@
 		 */
 		function createImage(path) {
 			if(!path) return;
+			if(path == IGNORE_LOAD_PATH) return;
 			const image = new Image();
 			image.src = path;
-			updateImages.push(image);
+			window.updateImages.push(image);
 			return image;
 		}
 		
+		/**
+		 * Load完了チェック後にFunction実施
+		 * @param {Function} func 関数
+		 */
 		function ckeckLoadImageExecFunc(func) {
-			if(updateImages.length == 0) func();
+			if(window.updateImages.length == 0) func();
 			let loadCount = 0;
-			for(let i = 0; i < updateImages.length; i++) {
-				updateImages[i].onload = () => {
-					loadCount++;
-					if(loadCount == updateImages.length) {
-						func();
-					}
+			let loadFunc = () => {
+				loadCount++;
+				if(loadCount == window.updateImages.length) {
+					func();
+					window.updateImages = [];
 				}
-				updateImages[i].onerror = () => {
-					loadCount++;
-					if(loadCount == updateImages.length) {
-						func();
-					}
-				}
+			}
+			for(let i = 0; i < window.updateImages.length; i++) {
+				window.updateImages[i].onload = loadFunc;
+				window.updateImages[i].onerror = loadFunc;
 			}
 		}
 		
@@ -256,7 +261,6 @@
 			} else {
 				func();
 			}
-			
 			return obj;
 		}
 		

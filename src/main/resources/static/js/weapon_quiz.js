@@ -17,6 +17,7 @@ function initWeaponQuiz() {
 	window.questionSelect = [];
 	window.questionAnswer = [];
 	window.answerAllText = "";
+	window.updateImages = [];
 }
 
 /**
@@ -31,6 +32,7 @@ function uninitWeaponQuiz() {
 	window.questionSelect = [];
 	window.questionAnswer = [];
 	window.answerAllText = "";
+	window.updateImages = [];
 }
 
 /**
@@ -51,7 +53,8 @@ async function createWeaponQuiz() {
 		);
 	}
 	createWeaponQuizData();
-	window.objCols = drawWeaponQuiz(window.weaponData);
+	window.objCols = createWeaponQuizObject(window.weaponData);
+	drawAll();
 }
 
 /**
@@ -59,7 +62,7 @@ async function createWeaponQuiz() {
  * @param {Object[]} weaponData 武器データ
  * @return {Object[]} 当たり判定用オブジェクトリスト
  */
-function drawWeaponQuiz(weaponData) {
+function createWeaponQuizObject(weaponData) {
 	var cols = [];
 	var ANSWER_TEXT = PANEL_WEAPON_QUIZ.ANSWER_TEXT;
 	var QUESTION_BUTTON = PANEL_WEAPON_QUIZ.QUESTION_SELECT_BUTTON;
@@ -69,41 +72,71 @@ function drawWeaponQuiz(weaponData) {
 	var SELECT_FRAME = PANEL_SELECT_WEAPON.SELECT_FRAME;
 	var CANCEL_BUTTON = PANEL_SELECT_WEAPON.CANCEL;
 	var WEAPON_BUTTON = PANEL_SELECT_WEAPON.WEAPON;
-	
+	let diff = createWeaponQuizDiff();
+	;
+	cols.push(createObject(BACKGROUND_IMAGE));
 	let answerObj = createObject(ANSWER_TEXT);
-	let answer = window.questionData[questionAnswer[questionAnswer.length - 1]].answer;
-	if(window.questionData[questionAnswer[questionAnswer.length - 1]].note)
-		answer += questionData[questionAnswer[questionAnswer.length - 1]].note;
-	answerObj.text = answer;
-	cols.push(drawText(answerObj));
+	answerObj.text = diff.answerText;
+	cols.push(answerObj);
 	
 	for(let i = 0; i < QUESTION_BUTTON.NUM; i++) {
-		let questionObj = createObject(QUESTION_BUTTON);
-		questionObj.name = QUESTION_BUTTON.NAME + (Number(i) + 1);
-		questionObj.text = (window.questionSelect[i] != -1) ? window.questionData[questionSelect[i]].question : "";
-		questionObj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * i;
-		cols.push(drawText(questionObj));
+		let obj = createObject(QUESTION_BUTTON);
+		obj.name = diff.questionButtons[i].name;
+		obj.text = diff.questionButtons[i].text;
+		obj.centerY = diff.questionButtons[i].centerY;
+		cols.push(obj);
 	}
 	
 	let hintListObj = createObject(HINT_LIST);
-	hintListObj.text = HINT_LIST.TEXT + window.answerAllText;
-	cols.push(drawText(hintListObj));
-	cols.push(drawText(createObject(ANSWER_BUTTON)));
-	cols.push(drawText(createObject(HINT_IMAGE)));
+	hintListObj.text = diff.hintListText;
+	cols.push(hintListObj);
+	cols.push(createObject(ANSWER_BUTTON));
+	cols.push(createObject(HINT_IMAGE));
 	
-	cols.push(drawText(createObject(SELECT_FRAME)));
-	cols.push(drawText(createObject(CANCEL_BUTTON)));
+	cols.push(createObject(SELECT_FRAME));
+	cols.push(createObject(CANCEL_BUTTON));
 	
 	for(let i = 0; i < weaponData.length; i++) {
-		var weaponObj = createObject(WEAPON_BUTTON);
-		weaponObj.name = WEAPON_BUTTON.NAME + (Number(i) + 1);
-		weaponObj.centerX = WEAPON_BUTTON.CENTERX + WEAPON_BUTTON.SCALEX * (i % WEAPON_BUTTON.NUMX);
-		weaponObj.centerY = WEAPON_BUTTON.CENTERY + WEAPON_BUTTON.SCALEY * (Math.floor((i) / WEAPON_BUTTON.NUMX));
-		weaponObj.image = WEAPON_BUTTON.IMAGE + weaponData[i].image;
-		cols.push(drawText(weaponObj));
+		let obj = createObject(WEAPON_BUTTON);
+		obj.name = diff.weaponButtons[i].name;
+		obj.centerX = diff.weaponButtons[i].centerX;
+		obj.centerY = diff.weaponButtons[i].centerY;
+		obj.image = createImage(diff.weaponButtons[i].image);
+		cols.push(obj);
 	}
-	
 	return cols;
+}
+
+function createWeaponQuizDiff() {
+	var QUESTION_BUTTON = PANEL_WEAPON_QUIZ.QUESTION_SELECT_BUTTON;
+	var HINT_LIST = PANEL_WEAPON_QUIZ.HINT_LIST;
+	var WEAPON_BUTTON = PANEL_SELECT_WEAPON.WEAPON;
+	let ret = {};
+	let answer = window.questionData[questionAnswer[questionAnswer.length - 1]].answer;
+	if(window.questionData[questionAnswer[questionAnswer.length - 1]].note)
+		answer += questionData[questionAnswer[questionAnswer.length - 1]].note;
+	ret.answerText = answer;
+	let questionButtons = [];
+	for(let i = 0; i < QUESTION_BUTTON.NUM; i++) {
+		let obj = {};
+		obj.name = QUESTION_BUTTON.NAME + (Number(i) + 1);
+		obj.text = (window.questionSelect[i] != -1) ? window.questionData[questionSelect[i]].question : "";
+		obj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * i;
+		questionButtons.push(obj);
+	}
+	ret.questionButtons = questionButtons;
+	ret.hintListText = HINT_LIST.TEXT + window.answerAllText;
+	let weaponButtons = [];
+	for(let i = 0; i < weaponData.length; i++) {
+		let obj = {};
+		obj.name = WEAPON_BUTTON.NAME + (Number(i) + 1);
+		obj.centerX = WEAPON_BUTTON.CENTERX + WEAPON_BUTTON.SCALEX * (i % WEAPON_BUTTON.NUMX);
+		obj.centerY = WEAPON_BUTTON.CENTERY + WEAPON_BUTTON.SCALEY * (Math.floor((i) / WEAPON_BUTTON.NUMX));
+		obj.image = WEAPON_BUTTON.IMAGE + weaponData[i].image;
+		weaponButtons.push(obj);
+	}
+	ret.weaponButtons = weaponButtons;
+	return ret;
 }
 
 /**
@@ -218,16 +251,12 @@ function clickWeaponQuiz(obj) {
 	} else if(obj.name == PANEL_SELECT_WEAPON.CANCEL.NAME) {
 		clear(window.ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
 		// 回答画面から質問画面へ判定を切り替える
-		var func = () => {
-			window.objCols.map((o)=>{
-				// 両方の画面で使う要素はないのでenableを反転させる
-				o.state ^= TEXT_STATE.ENABLE;
-				if(o.state & TEXT_STATE.ENABLE) {
-					drawText(o);
-				}
-			});
-		}
-		initDraw(func);
+		window.objCols.map((o)=>{
+			// 両方の画面で使う要素はないのでenableを反転させる
+			o.state ^= TEXT_STATE.ENABLE;
+		});
+		window.updateImages = [];
+		drawAll();
 	} else if(obj.name.indexOf(PANEL_SELECT_WEAPON.WEAPON.NAME) != -1) {
 		if(window.weaponData[weaponAnswerIndex].id == obj.name.replace(PANEL_SELECT_WEAPON.WEAPON.NAME, "")) {
 			window.objCols = [];

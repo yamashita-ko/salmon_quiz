@@ -4,6 +4,7 @@
  */
 function initWeaponQuizResult() {
 	window.objCols = [];
+	window.updateImages = [];
 }
 
 /**
@@ -11,13 +12,15 @@ function initWeaponQuizResult() {
  */
 function uninitWeaponQuizResult() {
 	window.objCols = [];
+	window.updateImages = [];
 }
 /**
  * 武器クイズリザルト画面作成
  */
 function createWeaponQuizResult() {
 	initWeaponQuizResult();
-	window.objCols = drawWeaponQuizResult(window.weaponData);
+	window.objCols = createWeaponQuizResultObject(window.weaponData);
+	drawAll();
 }
 
 /**
@@ -25,7 +28,7 @@ function createWeaponQuizResult() {
  * @param {Object[]} weaponData 武器データ
  * @return {Object[]} 当たり判定用オブジェクトリスト
  */
-function drawWeaponQuizResult(weaponData) {
+function createWeaponQuizResultObject(weaponData) {
 	var cols = [];
 	var WEAPON_IMAGE = PANEL_WEAPON_QUIZ_RESULT.WEAPON_IMAGE;
 	var CORRECT_IMAGE = PANEL_WEAPON_QUIZ_RESULT.CORRECT_IMAGE;
@@ -33,10 +36,11 @@ function drawWeaponQuizResult(weaponData) {
 	var MORE_BUTTON = PANEL_WEAPON_QUIZ_RESULT.MORE_BUTTON;
 	var RETURN_BUTTON = PANEL_WEAPON_QUIZ_RESULT.RETURN_BUTTON;
 	
+	cols.push(createObject(BACKGROUND_IMAGE));
 	var weaponImageObj = createObject(WEAPON_IMAGE);
-	weaponImageObj.image = WEAPON_IMAGE.IMAGE + weaponData[weaponAnswerIndex].image;
-	cols.push(drawText(weaponImageObj));
-	cols.push(drawText(createObject(CORRECT_IMAGE)));
+	weaponImageObj.image = createImage(WEAPON_IMAGE.IMAGE + weaponData[weaponAnswerIndex].image);
+	cols.push(weaponImageObj);
+	cols.push(createObject(CORRECT_IMAGE));
 	var hintAllObj = createObject(HINT_ALL);
 	// ヒントをすべてまとめた一覧を作成
 	let resultHint = "";
@@ -46,9 +50,9 @@ function drawWeaponQuizResult(weaponData) {
 	// カンマ区切りで出力されるため区切り文字を変更
 	resultHint = resultHint.replace(/,/g, "\\n")
 	hintAllObj.text = resultHint;
-	cols.push(drawText(hintAllObj));
-	cols.push(drawText(createObject(MORE_BUTTON)));
-	cols.push(drawText(createObject(RETURN_BUTTON)));
+	cols.push(hintAllObj);
+	cols.push(createObject(MORE_BUTTON));
+	cols.push(createObject(RETURN_BUTTON));
 	return cols;
 }
 

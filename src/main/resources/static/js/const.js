@@ -23,7 +23,7 @@ var TEXT_STATE = {
 };
 var FONT_IKA = 'ikamodoki1_0';
 var FONT_DEFAULT = 'MS PGothic';
-
+var IGNORE_LOAD_PATH = "http://" + location.host + "/images/";
 var MODE = {
 	SELECT: "mode_select",
 	WEAPON_QUIZ: "mode_weapon_quiz",
@@ -73,16 +73,16 @@ var PANEL_MODE_SELECT = {
 			"ブキクイズ",
 			"ツウジョウクイズ",
 		],
-		FONT_SIZE: 32,
-		CENTERX: CANVAS_WIDTH / 6,
+		FONT_SIZE: 50,
+		CENTERX: CANVAS_WIDTH / 2,
 		CENTERY: 320,
 		SPACEY: 200,
-		SCALEX: 300,
+		SCALEX: 400,
 		SCALEY: 150,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
-			NORMAL: "#0070C0",
-			HOVER: "#FFC000"
+			NORMAL: "rgba(0,102,192,0.7)",
+			HOVER: "rgba(255,192,0,0.7)"
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 		IMAGE: "http://" + location.host + "/images/button/button_green_1.png",
@@ -167,10 +167,10 @@ var PANEL_MODE_SELECT = {
 	},
 	YOKODUNA_IMAGE: {
 		NAME: "yokoduna_image",
-		CENTERX: 1550,
-		CENTERY: 800,
-		SCALEX: 800,
-		SCALEY: 800,
+		CENTERX: 1000,
+		CENTERY: 700,
+		SCALEX: 1200,
+		SCALEY: 1200,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
 		IMAGE: "http://" + location.host + "/images/yokoduna.png",
 	},
@@ -183,19 +183,28 @@ var PANEL_MODE_SELECT = {
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
 		IMAGE: "http://" + location.host + "/images/kumasan.png",
 	},
-	IKA_IMAGE: {
-		NAME: "ika_image",
-		CENTERX: 1000,
+	IKA2_IMAGE: {
+		NAME: "ika_image2",
+		CENTERX: 1600,
 		CENTERY: 600,
 		SCALEX: 600,
 		SCALEY: 600,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/ika_4.png",
+		IMAGE: "http://" + location.host + "/images/ika_2.png",
+	},
+	IKA3_IMAGE: {
+		NAME: "ika_image3",
+		CENTERX: 400,
+		CENTERY: 600,
+		SCALEX: 600,
+		SCALEY: 600,
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
+		IMAGE: "http://" + location.host + "/images/ika_3.png",
 	},
 	TITLE_LOGO_IMAGE: {
 		NAME: "title_logo_image",
-		CENTERX: 1200,
-		CENTERY: 900,
+		CENTERX: CANVAS_WIDTH / 2,
+		CENTERY: 950,
 		SCALEX: 600,
 		SCALEY: 600,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
@@ -375,7 +384,8 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		CENTERY: 900,
 		SCALEX: 300,
 		SCALEY: 300,
-		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		BG_COLOR: "#FFFFFF",
+		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_KADOMARU,
 		IMAGE: "http://" + location.host + "/images/"
 	},
 	HINT_ALL: {

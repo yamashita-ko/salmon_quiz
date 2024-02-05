@@ -4,6 +4,7 @@
  */
 function initModeSelect() {
 	window.objCols = [];
+	window.updateImages = [];
 }
 
 /**
@@ -11,6 +12,7 @@ function initModeSelect() {
  */
 function uninitModeSelect() {
 	window.objCols = [];
+	window.updateImages = [];
 }
 
 /**
@@ -18,20 +20,22 @@ function uninitModeSelect() {
  */
 function createModeSelect() {
 	initModeSelect();
-	window.objCols = drawModeSelect();
+	window.objCols = createObjectModeSelect();
+	drawAll();
 }
 
 /**
  * モード選択画面　初期表示・判定設定
  * @return {Object[]} 当たり判定用オブジェクトリスト
  */
-function drawModeSelect() {
+function createObjectModeSelect() {
 	var cols = [];
 	var COMMENT = PANEL_MODE_SELECT.COMMENT;
 	var BUTTON = PANEL_MODE_SELECT.BUTTON;
 	var YOKODUNA_IMAGE = PANEL_MODE_SELECT.YOKODUNA_IMAGE;
 	var KUMASAN_IMAGE = PANEL_MODE_SELECT.KUMASAN_IMAGE;
-	var IKA_IMAGE = PANEL_MODE_SELECT.IKA_IMAGE;
+	var IKA2_IMAGE = PANEL_MODE_SELECT.IKA2_IMAGE;
+	var IKA3_IMAGE = PANEL_MODE_SELECT.IKA3_IMAGE;
 	var TITLE_LOGO_IMAGE = PANEL_MODE_SELECT.TITLE_LOGO_IMAGE;
 	var ZAKOSYAKE_IMAGE = PANEL_MODE_SELECT.ZAKOSYAKE_IMAGE;
 	var INK_IMAGE = PANEL_MODE_SELECT.INK_IMAGE;
@@ -41,43 +45,84 @@ function drawModeSelect() {
 	var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
 	var NORMAL_QUIZ_START_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON;
 
-	cols.push(drawText(createObject(BACKGROUND_IMAGE)));
-	cols.push(drawText(createObject(COMMENT)));
+	var diff = createModeSelectDiff();
+	cols.push(createObject(BACKGROUND_IMAGE));
+	cols.push(createObject(YOKODUNA_IMAGE));
+	//cols.push(createObject(KUMASAN_IMAGE));
+	cols.push(createObject(IKA2_IMAGE));
+	cols.push(createObject(IKA3_IMAGE));
+	cols.push(createObject(TITLE_LOGO_IMAGE));
+	//cols.push(createObject(ZAKOSYAKE_IMAGE));
+	cols.push(createObject(INK_IMAGE));
+	//cols.push(createObject(IKURA_IMAGE));
+	cols.push(createObject(SELECT_FRAME));
+	cols.push(createObject(COMMENT));
 	for(let i = 0; i < BUTTON.NUM; i++) {
-		var buttonCol = createObject(BUTTON);
-		buttonCol.name = BUTTON.NAME[i];
-		buttonCol.text = BUTTON.TEXT[i];
-		buttonCol.centerY = BUTTON.CENTERY + BUTTON.SPACEY * i;
-		buttonCol.hoverImage = BUTTON.HOVER_IMAGE;
-		cols.push(drawText(buttonCol));
+		let obj = createObject(BUTTON);
+		obj.name = diff.buttons[i].name;
+		obj.text = diff.buttons[i].text;
+		obj.centerY = diff.buttons[i].centerY;
+		obj.hoverImage = diff.buttons[i].image;
+		cols.push(obj);
 	}
-	cols.push(drawText(createObject(YOKODUNA_IMAGE)));
-	cols.push(drawText(createObject(KUMASAN_IMAGE)));
-	cols.push(drawText(createObject(IKA_IMAGE)));
-	cols.push(drawText(createObject(TITLE_LOGO_IMAGE)));
-	cols.push(drawText(createObject(ZAKOSYAKE_IMAGE)));
-	cols.push(drawText(createObject(INK_IMAGE)));
-	cols.push(drawText(createObject(IKURA_IMAGE)));
-	cols.push(drawText(createObject(SELECT_FRAME)));
 	for(let i = 0; i < Object.keys(TYPE_BUTTON.INDEX).length; i++) {
-		typeButtonObj = createObject(TYPE_BUTTON);
-		typeButtonObj.name = TYPE_BUTTON.NAME[i];
-		typeButtonObj.index = (i + 1);
-		typeButtonObj.text = TYPE_BUTTON.TEXT[i];
-		typeButtonObj.centerX = TYPE_BUTTON.CENTERX + TYPE_BUTTON.SPACEX * i;
-		cols.push(drawText(typeButtonObj));
+		let obj = createObject(TYPE_BUTTON);
+		obj.name = diff.typeButtons[i].name;
+		obj.index = diff.typeButtons[i].index;
+		obj.text = diff.typeButtons[i].text;
+		obj.centerX = diff.typeButtons[i].centerX;
+		cols.push(obj);
 	}
 	for(let i = 0; i < LEVEL_BUTTON.NUM; i++) {
-		typeButtonObj = createObject(LEVEL_BUTTON);
-		typeButtonObj.name = LEVEL_BUTTON.NAME + (i + 1);
-		typeButtonObj.index = (i + 1);
-		typeButtonObj.text = String(i + 1);
-		typeButtonObj.centerX = LEVEL_BUTTON.CENTERX + LEVEL_BUTTON.SPACEX * (i % LEVEL_BUTTON.NUMX);
-		typeButtonObj.centerY = LEVEL_BUTTON.CENTERY + LEVEL_BUTTON.SPACEY * (Math.floor((i) / LEVEL_BUTTON.NUMX));
-		cols.push(drawText(typeButtonObj));
+		let obj = createObject(LEVEL_BUTTON);
+		obj.name = diff.levelButtons[i].name;
+		obj.index = diff.levelButtons[i].index;
+		obj.text = diff.levelButtons[i].text;
+		obj.centerX = diff.levelButtons[i].centerX;
+		obj.centerY = diff.levelButtons[i].centerY;
+		cols.push(obj);
 	}
-	cols.push(drawText(createObject(NORMAL_QUIZ_START_BUTTON)));
+	cols.push(createObject(NORMAL_QUIZ_START_BUTTON));
 	return cols;
+}
+
+function createModeSelectDiff() {
+	var BUTTON = PANEL_MODE_SELECT.BUTTON;
+	var TYPE_BUTTON = PANEL_MODE_SELECT.TYPE_BUTTON;
+	var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
+	let ret = {};
+	let buttons = [];
+	for(let i = 0; i < BUTTON.NUM; i++) {
+		var obj = {};
+		obj.name = BUTTON.NAME[i];
+		obj.text = BUTTON.TEXT[i];
+		obj.centerY = BUTTON.CENTERY + BUTTON.SPACEY * i;
+		obj.hoverImage = BUTTON.HOVER_IMAGE;
+		buttons.push(obj);
+	}
+	ret.buttons = buttons;
+	let typeButtons = [];
+	for(let i = 0; i < Object.keys(TYPE_BUTTON.INDEX).length; i++) {
+		var obj = {};
+		obj.name = TYPE_BUTTON.NAME[i];
+		obj.index = (i + 1);
+		obj.text = TYPE_BUTTON.TEXT[i];
+		obj.centerX = TYPE_BUTTON.CENTERX + TYPE_BUTTON.SPACEX * i;
+		typeButtons.push(obj);
+	}
+	ret.typeButtons = typeButtons;
+	let levelButtons = [];
+	for(let i = 0; i < LEVEL_BUTTON.NUM; i++) {
+		var obj = {};
+		obj.name = LEVEL_BUTTON.NAME + (i + 1);
+		obj.index = (i + 1);
+		obj.text = String(i + 1);
+		obj.centerX = LEVEL_BUTTON.CENTERX + LEVEL_BUTTON.SPACEX * (i % LEVEL_BUTTON.NUMX);
+		obj.centerY = LEVEL_BUTTON.CENTERY + LEVEL_BUTTON.SPACEY * (Math.floor((i) / LEVEL_BUTTON.NUMX));
+		levelButtons.push(obj);
+	}
+	ret.levelButtons = levelButtons;
+	return ret;
 }
 
 /**
