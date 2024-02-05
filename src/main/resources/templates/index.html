@@ -164,6 +164,7 @@
 		 */
 		function createObject(data) {
 			var obj = {};
+			const DEFAULT_KADOMARU_SIZE = 20;
 			obj.name = data.NAME;
 			obj.text = data.TEXT;
 			obj.fontSize = data.FONT_SIZE;
@@ -189,6 +190,9 @@
 			obj.font = data.FONT ? data.FONT : FONT_DEFAULT;
 			obj.margin = data.MARGIN;
 			obj.lineHeight = data.LINE_HEIGHT;
+			if(obj.state & TEXT_STATE.BG_KADOMARU) {
+				obj.kadomaruSize = data.KADOMARU_SIZE ? data.KADOMARU_SIZE : DEFAULT_KADOMARU_SIZE;
+			}
 			return obj;
 		}
 		
@@ -338,7 +342,7 @@
 	 			// テキスト背景描画
 				window.ctx.beginPath();
 				if(obj.state & TEXT_STATE.BG_KADOMARU) {
-					createRoundRectPath(window.ctx, obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY, 20)
+					createRoundRectPath(window.ctx, obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY, obj.kadomaruSize)
 				} else {
 					window.ctx.rect(obj.centerX - obj.scaleX / 2, obj.centerY - obj.scaleY / 2, obj.scaleX, obj.scaleY)
 				}
@@ -386,7 +390,6 @@
 		 				textPosX = obj.centerX - textWidth / 2;
 		 			}
 		 			if(obj.state & TEXT_STATE.CENTERY) {
-		 				//textPosY = obj.centerY + textHeight / 2;
 		 				textPosY = obj.centerY - textHeight * texts.length / 2 + textHeight * (i + 1);
 		 				textPosY += -LINE_HEIGHT * (texts.length - 1) / 2 + LINE_HEIGHT * i
 		 			} else {
