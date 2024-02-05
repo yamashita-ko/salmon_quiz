@@ -42,6 +42,7 @@ function createWeaponQuizResultObject(weaponData) {
 	var hintAllObj = createObject(HINT_ALL);
 	// ヒントをすべてまとめた一覧を作成
 	let resultHint = "";
+	resultHint += "正解は「" + weaponData[weaponAnswerIndex].name + "」\\n";
 	resultHint += window.questionData.map((obj) => {
 		return obj.answer;
 	});

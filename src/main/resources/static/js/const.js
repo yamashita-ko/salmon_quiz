@@ -412,11 +412,12 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		SCALEY: 300,
 		BG_COLOR: "#FFFFFF",
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/"
+		IMAGE: "http://" + location.host + "/images/",
+		KADOMARU_SIZE: 150
 	},
 	HINT_ALL: {
 		NAME: "answer_text",
-		FONT_SIZE: 32,
+		FONT_SIZE: 36,
 		CENTERX: CANVAS_WIDTH / 4 * 3,
 		CENTERY: 400,
 		SCALEX: 700,
@@ -425,11 +426,13 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
 		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
+		MARGIN: 20,
+		LINE_HEIGHT: 10
 	},
 	MORE_BUTTON: {
 		NAME: "more_button",
 		TEXT: "もう一度挑戦する",
-		FONT_SIZE: 32,
+		FONT_SIZE: 45,
 		CENTERX: CANVAS_WIDTH / 4 * 1,
 		CENTERY: 900,
 		SCALEX: 500,
@@ -439,14 +442,15 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 			NORMAL: "#0070C0",
 			HOVER: "#FFC000",
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		KADOMARU_SIZE: 40
 	},
 	RETURN_BUTTON: {
 		NAME: "return_button",
 		TEXT: "モード選択画面へ戻る",
-		FONT_SIZE: 32,
+		FONT_SIZE: 45,
 		CENTERX: CANVAS_WIDTH / 4 * 3,
 		CENTERY: 900,
 		SCALEX: 500,
@@ -456,9 +460,10 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 			NORMAL: "#0070C0",
 			HOVER: "#FFC000",
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		KADOMARU_SIZE: 40
 	},
 }
 
