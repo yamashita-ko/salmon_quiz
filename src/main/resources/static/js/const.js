@@ -82,7 +82,7 @@ var PANEL_MODE_SELECT = {
 		SCALEY: 150,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
-			NORMAL: "rgba(0, 102, 192, 0.7)",
+			NORMAL: "rgba(0, 112, 192, 0.7)",
 			HOVER: "rgba(255, 192, 0, 0.7)",
 			DISABLE: "rgba(85, 85, 85, 0.7)",
 		},
@@ -260,7 +260,6 @@ var PANEL_WEAPON_QUIZ = {
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 		MARGIN: 20,
 		LINE_HEIGHT: 10
 	},
@@ -314,8 +313,6 @@ var PANEL_WEAPON_QUIZ = {
 			HOVER: "#FFC000",
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
 		GROUP: GROUP.WEAPON_QUIZ
 	},
 	HINT_IMAGE: {

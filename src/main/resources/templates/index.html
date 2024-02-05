@@ -387,7 +387,8 @@
 		 			}
 		 			if(obj.state & TEXT_STATE.CENTERY) {
 		 				//textPosY = obj.centerY + textHeight / 2;
-		 				textPosY = obj.centerY - (textHeight) * texts.length / 2 + (textHeight) * (i + 1);
+		 				textPosY = obj.centerY - textHeight * texts.length / 2 + textHeight * (i + 1);
+		 				textPosY += -LINE_HEIGHT * (texts.length - 1) / 2 + LINE_HEIGHT * i
 		 			} else {
 		 				textPosY += (textHeight + LINE_HEIGHT) * i;
 					 }

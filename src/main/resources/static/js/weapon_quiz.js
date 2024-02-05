@@ -305,7 +305,6 @@ function weaponQuizHoverAction(obj) {
 		findNameExecFunc(PANEL_SELECT_WEAPON.WEAPON_NAME.NAME, (o) => {
 			if(o.text == obj.weaponName)
 				return;
-			console.log(obj.weaponName)
 			o.text = obj.weaponName;
 			drawText(o);
 		})
