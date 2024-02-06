@@ -37,6 +37,7 @@ function createObjectModeSelect() {
 	var IKURA_IMAGE = PANEL_MODE_SELECT.IKURA_IMAGE;
 	var SELECT_FRAME = PANEL_MODE_SELECT.NORMAL_QUIZ_SELECT_FRAME;
 	var TYPE_BUTTON = PANEL_MODE_SELECT.TYPE_BUTTON;
+	var OTHER_BUTTON = PANEL_MODE_SELECT.OTHER_BUTTON;
 	var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
 	var NORMAL_QUIZ_START_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON;
 	var NORMAL_QUIZ_CANCEL_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_CANCEL_BUTTON;
@@ -66,6 +67,16 @@ function createObjectModeSelect() {
 		obj.index = diff.typeButtons[i].index;
 		obj.text = diff.typeButtons[i].text;
 		obj.centerX = diff.typeButtons[i].centerX;
+		obj.centerY = diff.typeButtons[i].centerY;
+		cols.push(obj);
+	}
+	for(let i = 0; i < Object.keys(OTHER_BUTTON.INDEX).length; i++) {
+		let obj = createObject(TYPE_BUTTON);
+		obj.name = diff.otherButtons[i].name;
+		obj.index = diff.otherButtons[i].index;
+		obj.text = diff.otherButtons[i].text;
+		obj.centerX = diff.otherButtons[i].centerX;
+		obj.centerY = diff.otherButtons[i].centerY;
 		cols.push(obj);
 	}
 	for(let i = 0; i < LEVEL_BUTTON.NUM; i++) {
@@ -86,6 +97,7 @@ function createObjectModeSelect() {
 function createModeSelectDiff() {
 	var BUTTON = PANEL_MODE_SELECT.BUTTON;
 	var TYPE_BUTTON = PANEL_MODE_SELECT.TYPE_BUTTON;
+	var OTHER_BUTTON = PANEL_MODE_SELECT.OTHER_BUTTON;
 	var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
 	let ret = {};
 	let buttons = [];
@@ -104,10 +116,22 @@ function createModeSelectDiff() {
 		obj.name = TYPE_BUTTON.NAME[i];
 		obj.index = (i + 1);
 		obj.text = TYPE_BUTTON.TEXT[i];
-		obj.centerX = TYPE_BUTTON.CENTERX + TYPE_BUTTON.SPACEX * i;
+		obj.centerX = TYPE_BUTTON.CENTERX + TYPE_BUTTON.SPACEX * (i % TYPE_BUTTON.NUMX);
+		obj.centerY = TYPE_BUTTON.CENTERY + TYPE_BUTTON.SPACEY * (Math.floor(i / TYPE_BUTTON.NUMX));
 		typeButtons.push(obj);
 	}
 	ret.typeButtons = typeButtons;
+	let otherButtons = [];
+	for(let i = 0; i < Object.keys(OTHER_BUTTON.INDEX).length; i++) {
+		var obj = {};
+		obj.name = OTHER_BUTTON.NAME[i];
+		obj.index = (i + 1);
+		obj.text = OTHER_BUTTON.TEXT[i];
+		obj.centerX = OTHER_BUTTON.CENTERX + OTHER_BUTTON.SPACEX * (i % OTHER_BUTTON.NUMX);
+		obj.centerY = OTHER_BUTTON.CENTERY + OTHER_BUTTON.SPACEY * (Math.floor(i / OTHER_BUTTON.NUMX));
+		otherButtons.push(obj);
+	}
+	ret.otherButtons = otherButtons;
 	let levelButtons = [];
 	for(let i = 0; i < LEVEL_BUTTON.NUM; i++) {
 		var obj = {};
@@ -115,7 +139,7 @@ function createModeSelectDiff() {
 		obj.index = (i + 1);
 		obj.text = String(i + 1);
 		obj.centerX = LEVEL_BUTTON.CENTERX + LEVEL_BUTTON.SPACEX * (i % LEVEL_BUTTON.NUMX);
-		obj.centerY = LEVEL_BUTTON.CENTERY + LEVEL_BUTTON.SPACEY * (Math.floor((i) / LEVEL_BUTTON.NUMX));
+		obj.centerY = LEVEL_BUTTON.CENTERY + LEVEL_BUTTON.SPACEY * (Math.floor(i / LEVEL_BUTTON.NUMX));
 		levelButtons.push(obj);
 	}
 	ret.levelButtons = levelButtons;
@@ -145,6 +169,12 @@ function clickModeSelect(obj) {
 			drawText(obj);
 		}
 	}
+	for(let i = 0; i < Object.keys(PANEL_MODE_SELECT.OTHER_BUTTON.INDEX).length; i++) {
+		if(obj.name == PANEL_MODE_SELECT.OTHER_BUTTON.NAME[i]) {
+			obj.state ^= TEXT_STATE.HILIGHT;
+			drawText(obj);
+		}
+	}
 	for(let i = 0; i < PANEL_MODE_SELECT.LEVEL_BUTTON.NUM; i++) {
 		if(obj.name == PANEL_MODE_SELECT.LEVEL_BUTTON.NAME + (i + 1)) {
 			obj.state ^= TEXT_STATE.HILIGHT;
@@ -170,6 +200,11 @@ function clickModeSelect(obj) {
 	if(obj.name == PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON.NAME) {
 		let typeFilterObj = window.objCols.filter((o) => PANEL_MODE_SELECT.TYPE_BUTTON.NAME.includes(o.name) && (o.state & TEXT_STATE.HILIGHT))
 		window.normalQuizType = typeFilterObj.map((o) => o.index);
+		let otherFilterObj = window.objCols.filter((o) => PANEL_MODE_SELECT.OTHER_BUTTON.NAME.includes(o.name) && (o.state & TEXT_STATE.HILIGHT))
+		const UNREASONABLE = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.UNREASONABLE];
+		const RANKAKU = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.RANKAKU];
+		window.normalQuizIsUnreasonable = otherFilterObj.find((o) => o.name == UNREASONABLE) ? true : false;
+		window.normalQuizIsRankaku = otherFilterObj.find((o) => o.name == RANKAKU) ? true : false; 
 		let levelFilterObj = window.objCols.filter((o) => o.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o.state & TEXT_STATE.HILIGHT))
 		window.normalQuizLevel = levelFilterObj.map((o) => o.index);
 		console.log(window.normalQuizType);

@@ -2,6 +2,8 @@
 var normalQuizData = {};
 var normalQuizType = [];
 var normalQuizLevel = [];
+var normalQuizIsUnreasonable = true;
+var normalQuizIsRankaku = true;
 
 /**
  * 通常クイズ画面　初期設定
@@ -19,6 +21,8 @@ function uninitNormalQuiz() {
 	normalQuizData = {};
 	normalQuizType = [];
 	normalQuizLevel = [];
+	normalQuizIsUnreasonable = true;
+	normalQuizIsRankaku = true;
 }
 
 /**
@@ -29,8 +33,13 @@ async function createNormalQuiz() {
     window.normalQuizData = await fetch("http://" + location.host + "/quiz?type=0").then(function(res) {
         return res.json();
     })
-    
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
+    if(!window.normalQuizIsUnreasonable) {
+    	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isUnreasonable == 0);
+    }
+    if(!window.normalQuizIsRankaku) {
+    	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isRankaku == 0);
+    }
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     
     let num = forRange(448, 451);
@@ -54,8 +63,20 @@ async function createNormalQuiz() {
 			return cloneArray;
 		});
 	}
-	window.objCols = createObjectNormalQuiz();
-	drawAll();
+	if(window.normalQuizData.length > 0) {
+		window.objCols = createObjectNormalQuiz();
+		drawAll();
+	} else {
+		window.objCols.push(createObject(BACKGROUND_IMAGE));
+		let textObj = createObject(PANEL_NORMAL_QUIZ.QUESTION_TEXT);
+		textObj.text = "出題できる問題がありません。"
+		window.objCols.push(textObj);
+		let obj = createObject(PANEL_NORMAL_QUIZ.RETURN_BUTTON);
+		obj.state |= TEXT_STATE.ENABLE;
+		window.objCols.push(obj);
+		drawAll();
+	}
+	
 }
 
 /**

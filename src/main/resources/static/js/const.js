@@ -96,7 +96,8 @@ var PANEL_MODE_SELECT = {
 		TEXT: "ツウジョウクイズは出題された答えを選択肢から選ぶシンプルなクイズです。\\n" + 
 			"出題する内容と難易度を選択し、ゲームを開始してください。\\n" +
 			"色がグレーの問題は出題されません。\\n\\n" +
-			"出題内容　：\\n\\n\\n" + 
+			"出題内容　：\\n\\n" + 
+			"その他設定：\\n\\n\\n" + 
 			"出題難易度：",
 		FONT_SIZE: 50,
 		CENTERX: CANVAS_WIDTH / 2,
@@ -113,21 +114,53 @@ var PANEL_MODE_SELECT = {
 	TYPE_BUTTON: {
 		INDEX: {
 			NORMAL: 1,
-			Trivia: 2
+			TRIVIA: 2
 		},
 		NAME: [
 			"type_button_normal",
 			"type_button_trivia"
 		],
 		TEXT: [
-			"通常",
-			"雑学"
+			"通常問題のみ",
+			"雑学問題のみ"
 		],
+		NUMX: 2,
 		FONT_SIZE: 50,
-		CENTERX: 520,
-		SPACEX: 300,
-		CENTERY: 380,
-		SCALEX: 300,
+		CENTERX: 540,
+		SPACEX: 350,
+		CENTERY: 375,
+		SPACEY: 100,
+		SCALEX: 350,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#555555",
+			HOVER: "#555555",
+			HILIGHT: "#FFC000"
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU | TEXT_STATE.HILIGHT,
+		GROUP: GROUP.NORMAL_QUIZ
+	},
+	OTHER_BUTTON: {
+		INDEX: {
+			UNREASONABLE: 1,
+			RANKAKU: 2
+		},
+		NAME: [
+			"type_button_unreasonable",
+			"type_button_rankaku"
+		],
+		TEXT: [
+			"理不尽問題",
+			"乱獲問題"
+		],
+		NUMX: 2,
+		FONT_SIZE: 50,
+		CENTERX: 540,
+		SPACEX: 350,
+		CENTERY: 515,
+		SPACEY: 100,
+		SCALEX: 350,
 		SCALEY: 100,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
@@ -143,10 +176,10 @@ var PANEL_MODE_SELECT = {
 		NUMX: 5,
 		NAME: "level_button",
 		TEXT: "",
-		FONT_SIZE: 50,
+		FONT_SIZE: 80,
 		CENTERX: 430,
 		SPACEX: 120,
-		CENTERY: 530,
+		CENTERY: 660,
 		SPACEY: 120,
 		SCALEX: 120,
 		SCALEY: 120,
@@ -156,22 +189,26 @@ var PANEL_MODE_SELECT = {
 			HOVER: "#555555",
 			HILIGHT: "#FFC000"
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.HILIGHT,
-		GROUP: GROUP.NORMAL_QUIZ
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.HILIGHT,
+		GROUP: GROUP.NORMAL_QUIZ,
+		FONT: FONT_IKA,
+		MARGINY: 40,
 	},
 	NORMAL_QUIZ_START_BUTTON: {
 		NAME: "normal_quiz_start_button",
 		TEXT: "上記内容で開始する",
 		FONT_SIZE: 50,
 		CENTERX: 670,
-		CENTERY: 800,
+		CENTERY: 930,
 		SCALEX: 600,
 		SCALEY: 100,
 		TEXT_COLOR: "#FFFFFF",
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		BG_COLOR: {
+			NORMAL: "rgba(0, 112, 192, 1)",
+			HOVER: "rgba(255, 192, 0, 1)",
+			DISABLE: "rgba(85, 85, 85, 1)",
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 		GROUP: GROUP.NORMAL_QUIZ
 	},
 	NORMAL_QUIZ_CANCEL_BUTTON: {
@@ -482,6 +519,7 @@ var PANEL_NORMAL_QUIZ = {
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU | TEXT_STATE.BOLD,
 		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
+		MARGIN: 20
 	},
 	ANSWER_BUTTON: {
 		NUM: 4,
@@ -496,14 +534,12 @@ var PANEL_NORMAL_QUIZ = {
 		BG_COLOR: {
 			NORMAL: "#0070C0",
 			HOVER: "#FFC000",
-			DISABLE: "#AA4444",
+			DISABLE: "#555555",
 			HILIGHT: "#FFC000"
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.BOLD,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
-		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
-		HILIGHT_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERY | TEXT_STATE.BOLD | TEXT_STATE.BG_KADOMARU,
+		KADOMARU_SIZE: 40,
+		MARGINX: 30
 	},
 	QUESTION_IMAGE: {
 		NAME: "question_image",
@@ -553,10 +589,7 @@ var PANEL_NORMAL_QUIZ = {
 			HOVER: "#FFC000",
 			DISABLE: "#555555"
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
-		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_red_1.png",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 	},
 	RETURN_BUTTON: {
 		NAME: "return_button",
@@ -571,8 +604,6 @@ var PANEL_NORMAL_QUIZ = {
 			NORMAL: "#0070C0",
 			HOVER: "#FFC000",
 		},
-		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png"
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 	},
 };

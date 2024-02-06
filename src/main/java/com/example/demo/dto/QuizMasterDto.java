@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class QuizMasterDto implements Serializable {
 	private Integer id;
+	private Integer isUnreasonable;
+	private Integer isRankaku;
 	private Integer type;
 	private Integer level;
 	private String question;
@@ -17,6 +19,18 @@ public class QuizMasterDto implements Serializable {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public Integer getIsUnreasonable() {
+		return isUnreasonable;
+	}
+	public void setIsUnreasonable(Integer isUnreasonable) {
+		this.isUnreasonable = isUnreasonable;
+	}
+	public Integer getIsRankaku() {
+		return isRankaku;
+	}
+	public void setIsRankaku(Integer isRankaku) {
+		this.isRankaku = isRankaku;
 	}
 	public Integer getType() {
 		return type;

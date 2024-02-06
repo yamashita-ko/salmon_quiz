@@ -188,7 +188,13 @@
 			obj.hilightImage = createImage(data.HILIGHT_IMAGE);
 			obj.group = data.GROUP;
 			obj.font = data.FONT ? data.FONT : FONT_DEFAULT;
-			obj.margin = data.MARGIN;
+			if(data.MARGIN) {
+				obj.marginX = data.MARGIN;
+				obj.marginY = data.MARGIN;
+			} else {
+				obj.marginX = data.MARGINX;
+				obj.marginY = data.MARGINY;
+			}
 			obj.lineHeight = data.LINE_HEIGHT;
 			if(obj.state & TEXT_STATE.BG_KADOMARU) {
 				obj.kadomaruSize = data.KADOMARU_SIZE ? data.KADOMARU_SIZE : DEFAULT_KADOMARU_SIZE;
@@ -368,10 +374,13 @@
 		function ctxDrawText(obj) {
 			if(!obj.text)
 				return;
-			let TEXT_MARGIN = 10;
+			let TEXT_MARGINX = 10;
+			let TEXT_MARGINY = 10;
 			let LINE_HEIGHT = 10;
-			if(obj.margin)
-				TEXT_MARGIN = obj.margin;
+			if(obj.marginX)
+				TEXT_MARGINX = obj.marginX;
+			if(obj.marginY)
+				TEXT_MARGINY = obj.marginY;
 			if(obj.lineHeight)
 				LINE_HEIGHT = obj.lineHeight;
 			// \nを区切り文字として分割
@@ -385,8 +394,8 @@
 				const textHeight= measure.actualBoundingBoxAscent + measure.actualBoundingBoxDescent;
 				const texts = obj.text.split("\\n");
 				for(let i = 0; i < texts.length; i++) {
-		 			var textPosX = obj.centerX - obj.scaleX / 2 + TEXT_MARGIN;
-		 			var textPosY = obj.centerY - obj.scaleY / 2 + textHeight + TEXT_MARGIN;
+		 			var textPosX = obj.centerX - obj.scaleX / 2 + TEXT_MARGINX;
+		 			var textPosY = obj.centerY - obj.scaleY / 2 + textHeight + TEXT_MARGINY;
 		 			if(obj.state & TEXT_STATE.CENTERX) {
 						let textWidth = window.ctx.measureText(texts[i]).width;
 		 				textPosX = obj.centerX - textWidth / 2;
