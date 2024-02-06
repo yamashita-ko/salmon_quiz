@@ -294,6 +294,7 @@
 		}
 		
 		function ctxDrawImage(obj, func) {
+			// 画像がケースケア
  			if(obj.state & TEXT_STATE.IMAGE) {
 				let chara;
 				if(obj.state & TEXT_STATE.HILIGHT && obj.hilightImage) {
@@ -306,6 +307,7 @@
 					chara = obj.image;
 				}
 				if(!chara) return;
+				if(chara.width == 0) return;
 				let imgStartX = obj.centerX - obj.scaleX / 2;
 				let imgStartY = obj.centerY - obj.scaleY / 2;
 				let imgScaleX = obj.scaleX;
