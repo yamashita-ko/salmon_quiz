@@ -65,7 +65,7 @@ async function createNormalQuiz() {
 function createObjectNormalQuiz() {
 	var cols = [];
 	var QUESTION_TEXT = PANEL_NORMAL_QUIZ.QUESTION_TEXT;
-	var QUESTION_BUTTON = PANEL_NORMAL_QUIZ.QUESTION_BUTTON;
+	var ANSWER_BUTTON = PANEL_NORMAL_QUIZ.ANSWER_BUTTON;
 	var QUESTION_IMAGE = PANEL_NORMAL_QUIZ.QUESTION_IMAGE;
 	var ANSWER_IMAGE = PANEL_NORMAL_QUIZ.ANSWER_IMAGE;
 	var CORRECT_IMAGE = PANEL_NORMAL_QUIZ.CORRECT_IMAGE;
@@ -80,21 +80,21 @@ function createObjectNormalQuiz() {
 	let questionTextObj = createObject(QUESTION_TEXT);
 	questionTextObj.text = quizDiff.text;
 	cols.push(questionTextObj);
-	let questionButtons = [];
-	for(let i = 0; i < QUESTION_BUTTON.NUM; i++) {
-		let questionButtonObj = createObject(QUESTION_BUTTON);
-		questionButtonObj.name = QUESTION_BUTTON.NAME + (Number(i) + 1);
-		questionButtonObj.centerY = QUESTION_BUTTON.CENTERY + QUESTION_BUTTON.SPACEY * i;
+	let answerButtons = [];
+	for(let i = 0; i < ANSWER_BUTTON.NUM; i++) {
+		let answerButtonObj = createObject(ANSWER_BUTTON);
+		answerButtonObj.name = ANSWER_BUTTON.NAME + (Number(i) + 1);
+		answerButtonObj.centerY = ANSWER_BUTTON.CENTERY + ANSWER_BUTTON.SPACEY * i;
 		if(quizDiff.buttons[i]) {
-			questionButtonObj.text = quizDiff.buttons[i].text;
-			questionButtonObj.state |= TEXT_STATE.ENABLE;
-			questionButtonObj.isCorrect = (i + 1 == window.normalQuizData[0].answerIndex) ? true : false;
+			answerButtonObj.text = quizDiff.buttons[i].text;
+			answerButtonObj.state |= TEXT_STATE.ENABLE;
+			answerButtonObj.isCorrect = (i + 1 == window.normalQuizData[0].answerIndex) ? true : false;
 		}
-		questionButtons.push(questionButtonObj);
+		answerButtons.push(answerButtonObj);
 	}
 	// シャッフル
-	shuffleQuestion(questionButtons);
-	cols = cols.concat(questionButtons);
+	shuffleAnswer(answerButtons);
+	cols = cols.concat(answerButtons);
 	
 	let questionImageObj = createObject(QUESTION_IMAGE);
 	questionImageObj.image = createImage(quizDiff.questionImage);
@@ -117,33 +117,32 @@ function updateObjectNormalQuiz() {
 	
 	findNameExecFunc(QUESTION_TEXT.NAME, (o) => o.text = quizDiff.text);
 	// ボタンの参照を取得
-	let questionButtons = window.objCols.filter((o) => o.name.indexOf(PANEL_NORMAL_QUIZ.QUESTION_BUTTON.NAME) != -1);
+	let answerButtons = window.objCols.filter((o) => o.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1);
 	for(let i = 0; i < window.normalQuizData[0].answerList.length; i++) {
-		questionButtons[i].text = quizDiff.buttons[i].text;
-		questionButtons[i].state |= TEXT_STATE.ENABLE;
-		questionButtons[i].isCorrect = (i + 1 == window.normalQuizData[0].answerIndex) ? true : false;
+		answerButtons[i].text = quizDiff.buttons[i].text;
+		answerButtons[i].state |= TEXT_STATE.ENABLE;
+		answerButtons[i].isCorrect = (i + 1 == window.normalQuizData[0].answerIndex) ? true : false;
 	}
 	// シャッフル
-	shuffleQuestion(questionButtons);
-	
+	shuffleAnswer(answerButtons);
 	findNameExecFunc(QUESTION_IMAGE.NAME, (o) => o.image = createImage(quizDiff.questionImage));
 	findNameExecFunc(ANSWER_IMAGE.NAME, (o) => o.image = createImage(quizDiff.answerImage));
 }
-function shuffleQuestion(questions) {
+function shuffleAnswer(answers) {
 	// 問題情報のみをシャッフル
 	for (let i = window.normalQuizData[0].answerList.length - 1; i >= 0; i--) {
 		let rand = Math.floor(Math.random() * (i + 1));
 		let tmpStorage = {
-			text: questions[i].text,
-			state: questions[i].state,
-			isCorrect: questions[i].isCorrect
+			text: answers[i].text,
+			state: answers[i].state,
+			isCorrect: answers[i].isCorrect
 		};
-		questions[i].text = questions[rand].text;
-		questions[i].state = questions[rand].state;
-		questions[i].isCorrect = questions[rand].isCorrect;
-		questions[rand].text = tmpStorage.text;
-		questions[rand].state = tmpStorage.state;
-		questions[rand].isCorrect = tmpStorage.isCorrect;
+		answers[i].text = answers[rand].text;
+		answers[i].state = answers[rand].state;
+		answers[i].isCorrect = answers[rand].isCorrect;
+		answers[rand].text = tmpStorage.text;
+		answers[rand].state = tmpStorage.state;
+		answers[rand].isCorrect = tmpStorage.isCorrect;
 	}
 }
 
@@ -169,9 +168,7 @@ function createNormalQuizDiff() {
  * @param {Object} obj クリック対象
  */
 function clickNormalQuiz(obj) {
-	if(obj.name.indexOf(PANEL_NORMAL_QUIZ.QUESTION_BUTTON.NAME) != -1) {
-		let isCorrect = window.normalQuizData[0].answerIndex == obj.name.replace(PANEL_NORMAL_QUIZ.QUESTION_BUTTON.NAME, "");
-		
+	if(obj.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1) {
 		window.objCols.map((o) => {
 			if(o.name == PANEL_NORMAL_QUIZ.QUESTION_TEXT.NAME) {
 				let type = window.normalQuizData[0].type == 1 ? "通常" : "雑学";
@@ -184,8 +181,8 @@ function clickNormalQuiz(obj) {
 			}else if(o.name == PANEL_NORMAL_QUIZ.RETURN_BUTTON.NAME) {
 				o.state ^= TEXT_STATE.ENABLE;
 				drawText(o);
-			} else if(o.name.indexOf(PANEL_NORMAL_QUIZ.QUESTION_BUTTON.NAME) != -1) {
-				if(window.normalQuizData[0].answerIndex == o.name.replace(PANEL_NORMAL_QUIZ.QUESTION_BUTTON.NAME, "")) {
+			} else if(o.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1) {
+				if(o.isCorrect) {
 					o.state |= TEXT_STATE.HILIGHT;
 					o.state &= ~TEXT_STATE.ACTIVE;
 				} else {
@@ -193,12 +190,12 @@ function clickNormalQuiz(obj) {
 				}
 				drawText(o);
 			}else if(o.name == PANEL_NORMAL_QUIZ.CORRECT_IMAGE.NAME) {
-				if(isCorrect) {
+				if(obj.isCorrect) {
 					o.state ^= TEXT_STATE.ENABLE;
 					drawText(o);
 				}
 			} else if(o.name == PANEL_NORMAL_QUIZ.INCORRECT_IMAGE.NAME) {
-				if(!isCorrect) {
+				if(!obj.isCorrect) {
 					o.state ^= TEXT_STATE.ENABLE;
 					drawText(o);
 				}

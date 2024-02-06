@@ -483,9 +483,9 @@ var PANEL_NORMAL_QUIZ = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU | TEXT_STATE.BOLD,
 		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
 	},
-	QUESTION_BUTTON: {
+	ANSWER_BUTTON: {
 		NUM: 4,
-		NAME: "question_button",
+		NAME: "answer_button",
 		FONT_SIZE: 32,
 		CENTERX: CANVAS_WIDTH / 5,
 		CENTERY: 380,
