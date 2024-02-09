@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/salmon_quiz" docBase="salmon_quiz" crossContext="true" reloadable="true" debug="1">
+    <Resource name="jdbc/mysql" auth="Container" type="javax.sql.DataSource"
+                  driverClassName="com.mysql.jdbc.Driver"
+                  url="jdbc:mysql://localhost:3306/salmondb"
+                  username="root" password="Numerugon1"
+                  maxIdle="10" defaultAutoCommit="false" />
+    <Resources cacheMaxSize="20480" />
+</Context>

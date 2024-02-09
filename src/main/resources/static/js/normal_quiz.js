@@ -42,9 +42,6 @@ async function createNormalQuiz() {
     }
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     
-    let num = forRange(448, 451);
-    window.normalQuizData = window.normalQuizData.filter((obj) => num.includes(obj.id));
-    
     window.normalQuizData.map((obj) => {
     	// 選択肢を配列にする
 		obj.answerList = obj.answerList.split(", ");
