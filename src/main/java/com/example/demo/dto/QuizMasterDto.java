@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class QuizMasterDto implements Serializable {
 	private Integer id;
-	private Integer isUnreasonable;
+	private Integer isNanikore;
 	private Integer isRankaku;
 	private Integer type;
 	private Integer level;
@@ -20,11 +20,11 @@ public class QuizMasterDto implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getIsUnreasonable() {
-		return isUnreasonable;
+	public Integer getIsNanikore() {
+		return isNanikore;
 	}
-	public void setIsUnreasonable(Integer isUnreasonable) {
-		this.isUnreasonable = isUnreasonable;
+	public void setIsNanikore(Integer isNanikore) {
+		this.isNanikore = isNanikore;
 	}
 	public Integer getIsRankaku() {
 		return isRankaku;

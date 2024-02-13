@@ -146,15 +146,15 @@ var PANEL_MODE_SELECT = {
 	},
 	OTHER_BUTTON: {
 		INDEX: {
-			UNREASONABLE: 1,
+			NANIKORE: 1,
 			RANKAKU: 2
 		},
 		NAME: [
-			"type_button_unreasonable",
+			"type_button_nanikore",
 			"type_button_rankaku"
 		],
 		TEXT: [
-			"理不尽問題",
+			"ナニコレ問題",
 			"乱獲問題"
 		],
 		NUMX: 2,

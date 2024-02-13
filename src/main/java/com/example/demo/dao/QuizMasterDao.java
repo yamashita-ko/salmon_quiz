@@ -24,7 +24,7 @@ public class QuizMasterDao extends BaseDao{
 			while(rs.next()) {
 				QuizMasterDto dto = new QuizMasterDto();
 				dto.setId(rs.getInt("id"));
-				dto.setIsUnreasonable(rs.getInt("is_unreasonable"));
+				dto.setIsNanikore(rs.getInt("is_nanikore"));
 				dto.setIsRankaku(rs.getInt("is_rankaku"));
 				dto.setType(rs.getInt("type"));
 				dto.setLevel(rs.getInt("level"));

@@ -37,6 +37,7 @@
 		var mode;
 		var updateImages = [];
 		var background;
+		var isCollision = true;
 		
 		/**
 		 * 初回起動
@@ -55,6 +56,7 @@
 		 * @param {Object} event DOMイベント
 		 */
 		window.canvas.onclick = (event) => {
+			if(!isCollision) return ;
     		const rect = event.target.getBoundingClientRect();
     		let mouse = {x: event.clientX - rect.left, y: event.clientY - rect.top};
 			console.log("X:" + mouse.x + " Y:" + mouse.y);
@@ -108,6 +110,7 @@
 		 * @param {Object} event DOMイベント
 		 */
 		canvas.onmousemove = (event) => {
+			if(!isCollision) return ;
     		const rect = event.target.getBoundingClientRect();
     		let mouse = {x: event.clientX - rect.left, y: event.clientY - rect.top};
 			
@@ -229,6 +232,7 @@
 		 */
 		function ckeckLoadImageExecFunc(func) {
 			if(window.updateImages.length == 0) return func();
+			window.isCollision = false;
 			console.log("loadImageNum:" + window.updateImages.length)
 			for(let i = 0; i < updateImages.length; i++) {
 				console.log("loadImage:" + window.updateImages[i].src)
@@ -240,6 +244,7 @@
 				if(loadCount == window.updateImages.length) {
 					func();
 					window.updateImages = [];
+					window.isCollision = true;
 				}
 			}
 			for(let i = 0; i < window.updateImages.length; i++) {
