@@ -2,7 +2,7 @@
 var normalQuizData = {};
 var normalQuizType = [];
 var normalQuizLevel = [];
-var normalQuizIsUnreasonable = true;
+var normalQuizIsNanikore = true;
 var normalQuizIsRankaku = true;
 
 /**
@@ -21,7 +21,7 @@ function uninitNormalQuiz() {
 	normalQuizData = {};
 	normalQuizType = [];
 	normalQuizLevel = [];
-	normalQuizIsUnreasonable = true;
+	normalQuizIsNanikore = true;
 	normalQuizIsRankaku = true;
 }
 
@@ -34,13 +34,17 @@ async function createNormalQuiz() {
         return res.json();
     })
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
-    if(!window.normalQuizIsUnreasonable) {
-    	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isUnreasonable == 0);
+    if(!window.normalQuizIsNanikore) {
+		console.log("nanikore zyanai")
+    	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isNanikore == 0);
     }
     if(!window.normalQuizIsRankaku) {
+		console.log("rankaku zyanai")
     	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isRankaku == 0);
     }
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
+    
+    console.log(window.normalQuizData.map((obj) => obj.id + ", "));
     
     window.normalQuizData.map((obj) => {
     	// 選択肢を配列にする

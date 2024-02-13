@@ -201,9 +201,10 @@ function clickModeSelect(obj) {
 		let typeFilterObj = window.objCols.filter((o) => PANEL_MODE_SELECT.TYPE_BUTTON.NAME.includes(o.name) && (o.state & TEXT_STATE.HILIGHT))
 		window.normalQuizType = typeFilterObj.map((o) => o.index);
 		let otherFilterObj = window.objCols.filter((o) => PANEL_MODE_SELECT.OTHER_BUTTON.NAME.includes(o.name) && (o.state & TEXT_STATE.HILIGHT))
-		const UNREASONABLE = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.UNREASONABLE];
-		const RANKAKU = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.RANKAKU];
-		window.normalQuizIsUnreasonable = otherFilterObj.find((o) => o.name == UNREASONABLE) ? true : false;
+		console.log("その他設定:" + otherFilterObj.map((o)=>o.name))
+		const NANIKORE = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.NANIKORE - 1];
+		const RANKAKU = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.RANKAKU - 1];
+		window.normalQuizIsNanikore = otherFilterObj.find((o) => o.name == NANIKORE) ? true : false;
 		window.normalQuizIsRankaku = otherFilterObj.find((o) => o.name == RANKAKU) ? true : false; 
 		let levelFilterObj = window.objCols.filter((o) => o.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o.state & TEXT_STATE.HILIGHT))
 		window.normalQuizLevel = levelFilterObj.map((o) => o.index);
