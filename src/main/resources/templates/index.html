@@ -233,10 +233,6 @@
 		function ckeckLoadImageExecFunc(func) {
 			if(window.updateImages.length == 0) return func();
 			window.isCollision = false;
-			console.log("loadImageNum:" + window.updateImages.length)
-			for(let i = 0; i < updateImages.length; i++) {
-				console.log("loadImage:" + window.updateImages[i].src)
-			}
 			
 			let loadCount = 0;
 			let loadFunc = () => {
