@@ -30,7 +30,7 @@ function uninitNormalQuiz() {
  */
 async function createNormalQuiz() {
 	initNormalQuiz();
-    window.normalQuizData = await fetch("https://" + location.host + "/quiz?type=0").then(function(res) {
+    window.normalQuizData = await fetch(HOST_PATH + "/quiz?type=0").then(function(res) {
         return res.json();
     })
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
