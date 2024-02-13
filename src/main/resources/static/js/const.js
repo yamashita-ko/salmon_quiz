@@ -3,7 +3,7 @@
  */
 var CANVAS_WIDTH = 1920;
 var CANVAS_HEIGHT = 1080;
-var IMAGE_PATH = "http://" + location.host + "/images/";
+var IMAGE_PATH = "https://" + location.host + "/images/";
 var TEXT_STATE = {
     IS_TEXT: 1<<0,
     IS_BUTTON: 1<<1,
@@ -24,7 +24,7 @@ var TEXT_STATE = {
 };
 var FONT_IKA = 'ikamodoki1_0';
 var FONT_DEFAULT = 'MS PGothic';
-var IGNORE_LOAD_PATH = "http://" + location.host + "/images/";
+var IGNORE_LOAD_PATH = "https://" + location.host + "/images/";
 var MODE = {
 	SELECT: "mode_select",
 	WEAPON_QUIZ: "mode_weapon_quiz",
@@ -48,7 +48,7 @@ var BACKGROUND_IMAGE = {
 	SCALEX: CANVAS_WIDTH,
 	SCALEY: CANVAS_HEIGHT,
 	STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-	IMAGE: "http://" + location.host + "/images/bg.png"
+	IMAGE: "https://" + location.host + "/images/bg.png"
 };
 /**
  * モード選択画面
@@ -234,7 +234,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 1200,
 		SCALEY: 1200,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/yokoduna.png",
+		IMAGE: "https://" + location.host + "/images/yokoduna.png",
 	},
 	IKA2_IMAGE: {
 		NAME: "ika_image2",
@@ -243,7 +243,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 600,
 		SCALEY: 600,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/ika_2.png",
+		IMAGE: "https://" + location.host + "/images/ika_2.png",
 	},
 	IKA3_IMAGE: {
 		NAME: "ika_image3",
@@ -252,7 +252,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 600,
 		SCALEY: 600,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/ika_3.png",
+		IMAGE: "https://" + location.host + "/images/ika_3.png",
 	},
 	TITLE_LOGO_IMAGE: {
 		NAME: "title_logo_image",
@@ -261,7 +261,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 1400,
 		SCALEY: 350,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/title_logo.png",
+		IMAGE: "https://" + location.host + "/images/title_logo.png",
 	},
 	IKURA_IMAGE: {
 		NAME: "zakosyake_image",
@@ -270,7 +270,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 80,
 		SCALEY: 80,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/ikura_image.png",
+		IMAGE: "https://" + location.host + "/images/ikura_image.png",
 	},
 	IKA4_IMAGE: {
 		NAME: "ika_image4",
@@ -279,7 +279,7 @@ var PANEL_MODE_SELECT = {
 		SCALEX: 500,
 		SCALEY: 800,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/ika_4.png",
+		IMAGE: "https://" + location.host + "/images/ika_4.png",
 		GROUP: MODE.NORMAL_QUIZ
 	},
 };
@@ -317,9 +317,9 @@ var PANEL_WEAPON_QUIZ = {
 			DISABLE: "#555555"
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
-		DISABLE_IMAGE: "http://" + location.host + "/images/button/button_black_1.png",
+		IMAGE: "https://" + location.host + "/images/button/button_blue_1.png",
+		HOVER_IMAGE: "https://" + location.host + "/images/button/button_yellow_1.png",
+		DISABLE_IMAGE: "https://" + location.host + "/images/button/button_black_1.png",
 		GROUP: GROUP.WEAPON_QUIZ
 	},
 	HINT_LIST: {
@@ -333,7 +333,7 @@ var PANEL_WEAPON_QUIZ = {
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
+		IMAGE: "https://" + location.host + "/images/button/text_green_2.png",
 		MARGIN: 20,
 		LINE_HEIGHT: 10
 	},
@@ -360,7 +360,7 @@ var PANEL_WEAPON_QUIZ = {
 		SCALEX: 600,
 		SCALEY: 600,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.ENABLE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/"
+		IMAGE: "https://" + location.host + "/images/"
 	}
 };
 
@@ -411,7 +411,7 @@ var PANEL_SELECT_WEAPON = {
 			DISABLE: "#555555"
 		},
 		STATE: TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE,
-		IMAGE: "http://" + location.host + "/images/",
+		IMAGE: "https://" + location.host + "/images/",
 		GROUP: GROUP.WEAPON_SELECT
 	},
 	WEAPON_NAME: {
@@ -439,7 +439,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		SCALEX: 1000,
 		SCALEY: 1000,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE,
-		IMAGE: "http://" + location.host + "/images/akuse/correct.png"
+		IMAGE: "https://" + location.host + "/images/akuse/correct.png"
 	},
 	WEAPON_IMAGE: {
 		NAME: "result_weapon_image",
@@ -449,7 +449,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		SCALEY: 300,
 		BG_COLOR: "#FFFFFF",
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/",
+		IMAGE: "https://" + location.host + "/images/",
 		KADOMARU_SIZE: 150
 	},
 	HINT_ALL: {
@@ -462,7 +462,7 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
+		IMAGE: "https://" + location.host + "/images/button/text_green_2.png",
 		MARGIN: 20,
 		LINE_HEIGHT: 10
 	},
@@ -480,8 +480,8 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 			HOVER: "#FFC000",
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		IMAGE: "https://" + location.host + "/images/button/button_blue_1.png",
+		HOVER_IMAGE: "https://" + location.host + "/images/button/button_yellow_1.png",
 		KADOMARU_SIZE: 40
 	},
 	RETURN_BUTTON: {
@@ -498,8 +498,8 @@ var PANEL_WEAPON_QUIZ_RESULT = {
 			HOVER: "#FFC000",
 		},
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
-		IMAGE: "http://" + location.host + "/images/button/button_blue_1.png",
-		HOVER_IMAGE: "http://" + location.host + "/images/button/button_yellow_1.png",
+		IMAGE: "https://" + location.host + "/images/button/button_blue_1.png",
+		HOVER_IMAGE: "https://" + location.host + "/images/button/button_yellow_1.png",
 		KADOMARU_SIZE: 40
 	},
 }
@@ -518,18 +518,18 @@ var PANEL_NORMAL_QUIZ = {
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: "#2D8013",
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.BG_KADOMARU | TEXT_STATE.BOLD,
-		IMAGE: "http://" + location.host + "/images/button/text_green_2.png",
+		IMAGE: "https://" + location.host + "/images/button/text_green_2.png",
 		MARGIN: 20
 	},
 	ANSWER_BUTTON: {
 		NUM: 4,
 		NAME: "answer_button",
 		FONT_SIZE: 32,
-		CENTERX: CANVAS_WIDTH / 5,
-		CENTERY: 380,
+		CENTERX: 420,
+		CENTERY: 390,
 		SPACEY: 180,
-		SCALEX: 500,
-		SCALEY: 150,
+		SCALEX: 650,
+		SCALEY: 170,
 		TEXT_COLOR: "#FFFFFF",
 		BG_COLOR: {
 			NORMAL: "#0070C0",
@@ -544,7 +544,7 @@ var PANEL_NORMAL_QUIZ = {
 	QUESTION_IMAGE: {
 		NAME: "question_image",
 		CENTERX: 1050,
-		CENTERY: 570,
+		CENTERY: 620,
 		SCALEX: 550,
 		SCALEY: 550,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.ENABLE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
@@ -564,7 +564,7 @@ var PANEL_NORMAL_QUIZ = {
 		SCALEX: 800,
 		SCALEY: 800,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/akuse/correct.png"
+		IMAGE: "https://" + location.host + "/images/akuse/correct.png"
 	},
 	INCORRECT_IMAGE: {
 		NAME: "incorrect_image",
@@ -573,7 +573,7 @@ var PANEL_NORMAL_QUIZ = {
 		SCALEX: 800,
 		SCALEY: 800,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
-		IMAGE: "http://" + location.host + "/images/akuse/incorrect.png"
+		IMAGE: "https://" + location.host + "/images/akuse/incorrect.png"
 	},
 	MORE_BUTTON: {
 		NAME: "more_button",

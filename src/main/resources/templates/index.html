@@ -79,20 +79,6 @@
 		}
 		
 		/**
-		 * 背景描画→関数オブジェクト描画
-		 * @param {function} func 背景描画後の処理
-		 */
-		function initDraw(func) {
-			// 背景画像の読み込み後に処理を行う 読み込み前に処理を行うと画面崩れする
-			var background = new Image();
-			background.src = "http://" + location.host + "/images/bg.png";
-		    background.onload = function() {
-				window.ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-				func();
-			}
-		}
-		
-		/**
 		 * モード変更
 		 * @param {Object} mode 背景描画後の処理
 		 */
@@ -242,7 +228,12 @@
 		 * @param {Function} func 関数
 		 */
 		function ckeckLoadImageExecFunc(func) {
-			if(window.updateImages.length == 0) func();
+			if(window.updateImages.length == 0) return func();
+			console.log("loadImageNum:" + window.updateImages.length)
+			for(let i = 0; i < updateImages.length; i++) {
+				console.log("loadImage:" + window.updateImages[i].src)
+			}
+			
 			let loadCount = 0;
 			let loadFunc = () => {
 				loadCount++;

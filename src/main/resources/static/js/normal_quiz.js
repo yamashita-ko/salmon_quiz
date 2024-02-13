@@ -30,7 +30,7 @@ function uninitNormalQuiz() {
  */
 async function createNormalQuiz() {
 	initNormalQuiz();
-    window.normalQuizData = await fetch("http://" + location.host + "/quiz?type=0").then(function(res) {
+    window.normalQuizData = await fetch("https://" + location.host + "/quiz?type=0").then(function(res) {
         return res.json();
     })
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
@@ -145,6 +145,7 @@ function updateObjectNormalQuiz() {
 	shuffleAnswer(answerButtons);
 	findNameExecFunc(QUESTION_IMAGE.NAME, (o) => o.image = createImage(quizDiff.questionImage));
 	findNameExecFunc(ANSWER_IMAGE.NAME, (o) => o.image = createImage(quizDiff.answerImage));
+	
 }
 function shuffleAnswer(answers) {
 	// 問題情報のみをシャッフル
@@ -178,6 +179,7 @@ function createNormalQuizDiff() {
 	ret.buttons = buttons;
 	ret.questionImage = window.normalQuizData[0].questionImage;
 	ret.answerImage = window.normalQuizData[0].answerImage;
+	console.log("問題の更新　問題番号：" + window.normalQuizData[0].id)
 	return ret;
 }
 

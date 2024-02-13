@@ -42,10 +42,10 @@ async function createWeaponQuiz() {
 		// 武器データ・質問データの取得は初回のみ
 		await Promise.all(
 			// 並行処理でリクエスト
-            window.weaponData = await fetch("http://" + location.host + "/weapon").then(function(res) {
+            window.weaponData = await fetch("https://" + location.host + "/weapon").then(function(res) {
                 return res.json();
             }),
-            window.questionDataOrg = await fetch("http://" + location.host + "/weapon-question").then(function(res) {
+            window.questionDataOrg = await fetch("https://" + location.host + "/weapon-question").then(function(res) {
                 return res.json();
             })
 		);
