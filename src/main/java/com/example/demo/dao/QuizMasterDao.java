@@ -8,7 +8,7 @@ import java.util.List;
 import com.example.demo.dto.QuizMasterDto;
 
 public class QuizMasterDao extends BaseDao{
-	public List<QuizMasterDto> find(List<String> typeList, Integer isNanikore, Integer isRankaku) {
+	public List<QuizMasterDto> find(List<String> typeList, Integer isNanikore, Integer isRankaku, List<String> levelList) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		List<QuizMasterDto> result = new ArrayList<>();
@@ -25,6 +25,11 @@ public class QuizMasterDao extends BaseDao{
 			if(typeCommand.length() > 0)
 				typeCommand += " AND ";
 			typeCommand += "quiz_master.is_rankaku =" + isRankaku;
+		}
+		if(levelList != null) {
+			if(typeCommand.length() > 0)
+				typeCommand += " AND ";
+			typeCommand += "quiz_master.level in (" + String.join(",", levelList) + ")";
 		}
 		if(typeCommand.length() > 0)
 			typeCommand += " AND ";

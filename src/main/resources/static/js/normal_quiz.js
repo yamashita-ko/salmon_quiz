@@ -34,10 +34,10 @@ async function createNormalQuiz() {
 	where += "?type=" + window.normalQuizType;
 	where += "&nanikore=" + window.normalQuizIsNanikore;
 	where += "&rankaku=" + window.normalQuizIsRankaku;
+	where += "&level=" + window.normalQuizLevel
     window.normalQuizData = await fetch(HOST_PATH + "/quiz" + where).then(function(res) {
         return res.json();
     })
-    window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     
     window.normalQuizData.map((obj) => {
     	// 選択肢を配列にする
