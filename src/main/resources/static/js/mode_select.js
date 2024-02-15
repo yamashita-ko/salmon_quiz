@@ -203,8 +203,8 @@ function clickModeSelect(obj) {
 		let otherFilterObj = window.objCols.filter((o) => PANEL_MODE_SELECT.OTHER_BUTTON.NAME.includes(o.name) && (o.state & TEXT_STATE.HILIGHT))
 		const NANIKORE = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.NANIKORE - 1];
 		const RANKAKU = PANEL_MODE_SELECT.OTHER_BUTTON.NAME[PANEL_MODE_SELECT.OTHER_BUTTON.INDEX.RANKAKU - 1];
-		window.normalQuizIsNanikore = otherFilterObj.find((o) => o.name == NANIKORE) ? true : false;
-		window.normalQuizIsRankaku = otherFilterObj.find((o) => o.name == RANKAKU) ? true : false; 
+		window.normalQuizIsNanikore = otherFilterObj.find((o) => o.name == NANIKORE) ? 1 : 0;
+		window.normalQuizIsRankaku = otherFilterObj.find((o) => o.name == RANKAKU) ? 1 : 0; 
 		let levelFilterObj = window.objCols.filter((o) => o.name.indexOf(PANEL_MODE_SELECT.LEVEL_BUTTON.NAME) > -1 && (o.state & TEXT_STATE.HILIGHT))
 		window.normalQuizLevel = levelFilterObj.map((o) => o.index);
 		let modeName = MODE.NORMAL_QUIZ;

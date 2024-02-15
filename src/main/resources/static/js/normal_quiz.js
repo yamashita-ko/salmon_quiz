@@ -30,16 +30,13 @@ function uninitNormalQuiz() {
  */
 async function createNormalQuiz() {
 	initNormalQuiz();
-    window.normalQuizData = await fetch(HOST_PATH + "/quiz?type=0").then(function(res) {
+	let where = "";
+	where += "?type=" + window.normalQuizType;
+	where += "&nanikore=" + window.normalQuizIsNanikore;
+	where += "&rankaku=" + window.normalQuizIsRankaku;
+    window.normalQuizData = await fetch(HOST_PATH + "/quiz" + where).then(function(res) {
         return res.json();
     })
-    window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizType.includes(obj.type));
-    if(!window.normalQuizIsNanikore) {
-    	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isNanikore == 0);
-    }
-    if(!window.normalQuizIsRankaku) {
-    	window.normalQuizData = window.normalQuizData.filter((obj) => obj.isRankaku == 0);
-    }
     window.normalQuizData = window.normalQuizData.filter((obj) => window.normalQuizLevel.includes(obj.level));
     
     window.normalQuizData.map((obj) => {

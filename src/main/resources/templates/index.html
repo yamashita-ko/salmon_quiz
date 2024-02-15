@@ -59,7 +59,6 @@
 			if(!isCollision) return ;
     		const rect = event.target.getBoundingClientRect();
     		let mouse = {x: event.clientX - rect.left, y: event.clientY - rect.top};
-			console.log("X:" + mouse.x + " Y:" + mouse.y);
             for (let i = 0; i < window.objCols.length; i++) {
 				if((window.objCols[i].state & TEXT_STATE.IS_BUTTON) == false) continue;
 				if((window.objCols[i].state & TEXT_STATE.ENABLE) == false) continue;

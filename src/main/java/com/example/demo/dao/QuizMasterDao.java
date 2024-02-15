@@ -8,15 +8,28 @@ import java.util.List;
 import com.example.demo.dto.QuizMasterDto;
 
 public class QuizMasterDao extends BaseDao{
-	public List<QuizMasterDto> find(Integer type) {
+	public List<QuizMasterDto> find(List<String> typeList, Integer isNanikore, Integer isRankaku) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		List<QuizMasterDto> result = new ArrayList<>();
 		String typeCommand = "";
-		if(type != null && type != 0) {
-			typeCommand = " WHERE quiz_master.type = " + type;
+		if(typeList != null) {
+			typeCommand += "quiz_master.type in (" + String.join(",", typeList) + ")";
 		}
-		String sql = "SELECT * FROM quiz_master" + typeCommand;
+		if(isNanikore == 0) {
+			if(typeCommand.length() > 0)
+				typeCommand += " AND ";
+			typeCommand += "quiz_master.is_nanikore = " + isNanikore;
+		}
+		if(isRankaku == 0) {
+			if(typeCommand.length() > 0)
+				typeCommand += " AND ";
+			typeCommand += "quiz_master.is_rankaku =" + isRankaku;
+		}
+		if(typeCommand.length() > 0)
+			typeCommand += " AND ";
+		typeCommand += "quiz_master.enable = 1";
+		String sql = "SELECT * FROM quiz_master WHERE " + typeCommand;
 		try {
 			connect();
 			stmt = con.createStatement();

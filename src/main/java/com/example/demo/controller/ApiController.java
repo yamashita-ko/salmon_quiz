@@ -39,9 +39,10 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/quiz", method = RequestMethod.GET)
-	public List<QuizMasterDto> getQuiz(@RequestParam(name = "type")Integer type) {
+	public List<QuizMasterDto> getQuiz(@RequestParam(name = "type")String type, @RequestParam(name = "nanikore")Integer isNanikore, @RequestParam(name = "rankaku")Integer isRankaku) {
+    	List<String> typeList = Arrays.asList(type.split(","));
     	QuizMasterDao quizMasterDao = new QuizMasterDao();
-    	List<QuizMasterDto> quizMaster = quizMasterDao.find(type);
+    	List<QuizMasterDto> quizMaster = quizMasterDao.find(typeList, isNanikore, isRankaku);
     	return quizMaster;
     }
 }
