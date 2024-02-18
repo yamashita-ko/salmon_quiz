@@ -94,8 +94,23 @@ var PANEL_MODE_SELECT = {
 		GROUP: GROUP.SELECT,
 		KADOMARU_SIZE: 40
 	},
+	WEAPON_QUIZ_SELECT_FRAME: {
+		NAME: "weapon_quiz_select_frame",
+		TEXT: "ブキクイズは限られたヒントからブキを特定するクイズです。\\n",
+		FONT_SIZE: 50,
+		CENTERX: CANVAS_WIDTH / 2,
+		CENTERY: CANVAS_HEIGHT / 2,
+		SCALEX: 1800,
+		SCALEY: 1000,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: "rgba(45, 96, 19, 0.95)",
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.ACTIVE,
+		GROUP: MODE.WEAPON_QUIZ,
+		MARGIN: 30,
+		LINE_HEIGHT: 20
+	},
 	NORMAL_QUIZ_SELECT_FRAME: {
-		NAME: "select_frame",
+		NAME: "normal_quiz_select_frame",
 		TEXT: "ツウジョウクイズは出題された答えを選択肢から選ぶシンプルなクイズです。\\n" + 
 			"出題する内容と難易度を選択し、ゲームを開始してください。\\n" +
 			"色がグレーの問題は出題されません。\\n\\n" +
@@ -197,6 +212,23 @@ var PANEL_MODE_SELECT = {
 		FONT: FONT_IKA,
 		MARGINY: 40,
 	},
+	WEAPON_QUIZ_START_BUTTON: {
+		NAME: "weapon_quiz_start_button",
+		TEXT: "上記内容で開始する",
+		FONT_SIZE: 50,
+		CENTERX: 670,
+		CENTERY: 930,
+		SCALEX: 600,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "rgba(0, 112, 192, 1)",
+			HOVER: "rgba(255, 192, 0, 1)",
+			DISABLE: "rgba(85, 85, 85, 1)",
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
+		GROUP: GROUP.WEAPON_QUIZ
+	},
 	NORMAL_QUIZ_START_BUTTON: {
 		NAME: "normal_quiz_start_button",
 		TEXT: "上記内容で開始する",
@@ -214,8 +246,24 @@ var PANEL_MODE_SELECT = {
 		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
 		GROUP: GROUP.NORMAL_QUIZ
 	},
+	WEAPON_QUIZ_CANCEL_BUTTON: {
+		NAME: "weapon_quiz_cancel",
+		TEXT: "Ｘ",
+		FONT_SIZE: 32,
+		CENTERX: 1835,
+		CENTERY: 65,
+		SCALEX: 50,
+		SCALEY: 50,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#CC0000",
+			HOVER: "#770000",
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY,
+		GROUP: GROUP.WEAPON_QUIZ
+	},
 	NORMAL_QUIZ_CANCEL_BUTTON: {
-		NAME: "cancel",
+		NAME: "normal_quiz_cancel",
 		TEXT: "Ｘ",
 		FONT_SIZE: 32,
 		CENTERX: 1835,

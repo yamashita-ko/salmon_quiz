@@ -46,10 +46,13 @@ export class ModeSelect extends BaseClass{
 		var IKA4_IMAGE = PANEL_MODE_SELECT.IKA4_IMAGE;
 		var TITLE_LOGO_IMAGE = PANEL_MODE_SELECT.TITLE_LOGO_IMAGE;
 		var IKURA_IMAGE = PANEL_MODE_SELECT.IKURA_IMAGE;
-		var SELECT_FRAME = PANEL_MODE_SELECT.NORMAL_QUIZ_SELECT_FRAME;
+		var WEAPON_QUIZ_SELECT_FRAME = PANEL_MODE_SELECT.WEAPON_QUIZ_SELECT_FRAME;
+		var NORMAL_QUIZ_SELECT_FRAME = PANEL_MODE_SELECT.NORMAL_QUIZ_SELECT_FRAME;
 		var TYPE_BUTTON = PANEL_MODE_SELECT.TYPE_BUTTON;
 		var OTHER_BUTTON = PANEL_MODE_SELECT.OTHER_BUTTON;
 		var LEVEL_BUTTON = PANEL_MODE_SELECT.LEVEL_BUTTON;
+		var WEAPON_QUIZ_START_BUTTON = PANEL_MODE_SELECT.WEAPON_QUIZ_START_BUTTON;
+		var WEAPON_QUIZ_CANCEL_BUTTON = PANEL_MODE_SELECT.WEAPON_QUIZ_CANCEL_BUTTON;
 		var NORMAL_QUIZ_START_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_START_BUTTON;
 		var NORMAL_QUIZ_CANCEL_BUTTON = PANEL_MODE_SELECT.NORMAL_QUIZ_CANCEL_BUTTON;
 	
@@ -70,8 +73,12 @@ export class ModeSelect extends BaseClass{
 			obj.hoverImage = diff.buttons[i].image;
 			cols.push(obj);
 		}
+		// ブキクイズ選択時説明画面用
+		cols.push(Common.createObject(WEAPON_QUIZ_SELECT_FRAME));
+		cols.push(Common.createObject(WEAPON_QUIZ_START_BUTTON));
+		cols.push(Common.createObject(WEAPON_QUIZ_CANCEL_BUTTON));
 		// ツウジョウクイズ選択時説明画面用
-		cols.push(Common.createObject(SELECT_FRAME));
+		cols.push(Common.createObject(NORMAL_QUIZ_SELECT_FRAME));
 		for(let i = 0; i < Object.keys(TYPE_BUTTON.INDEX).length; i++) {
 			let obj = Common.createObject(TYPE_BUTTON);
 			obj.name = diff.typeButtons[i].name;
@@ -166,6 +173,18 @@ export class ModeSelect extends BaseClass{
 	 * @param {Object} obj クリック対象
 	 */
 	click(obj) {
+		if(obj.name == PANEL_MODE_SELECT.BUTTON.NAME[PANEL_MODE_SELECT.BUTTON.INDEX.WEAPON_QUIZ - 1]) {
+			// 通常クイズの設定画面を表示
+			Common.filterGroupExecFunc(this.objCols, MODE.WEAPON_QUIZ, (o) => o.state |= TEXT_STATE.ENABLE);
+			Common.filterGroupExecFunc(this.objCols, MODE.SELECT, (o) => o.state &= ~TEXT_STATE.ACTIVE);
+			Common.drawAll(this.objCols);
+		}
+		if(obj.name == PANEL_MODE_SELECT.WEAPON_QUIZ_CANCEL_BUTTON.NAME) {
+			// 通常クイズの設定画面を閉じる
+			Common.filterGroupExecFunc(this.objCols, MODE.WEAPON_QUIZ, (o) => o.state &= ~TEXT_STATE.ENABLE);
+			Common.filterGroupExecFunc(this.objCols, MODE.SELECT, (o) => o.state |= TEXT_STATE.ACTIVE);
+			Common.drawAll(this.objCols);
+		}
 		if(obj.name == PANEL_MODE_SELECT.BUTTON.NAME[PANEL_MODE_SELECT.BUTTON.INDEX.NORMAL_QUIZ - 1]) {
 			// 通常クイズの設定画面を表示
 			Common.filterGroupExecFunc(this.objCols, MODE.NORMAL_QUIZ, (o) => o.state |= TEXT_STATE.ENABLE);
@@ -225,7 +244,7 @@ export class ModeSelect extends BaseClass{
 			let mode = new NormalQuiz(types, levels, isNanikore, isRankaku);
 			Common.changeMode(mode);
 		}
-		if(obj.name == MODE.WEAPON_QUIZ) {
+		if(obj.name == PANEL_MODE_SELECT.WEAPON_QUIZ_START_BUTTON.NAME) {
 			Common.changeMode(new WeaponQuiz());
 		}
 	}
