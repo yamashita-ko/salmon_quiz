@@ -202,7 +202,7 @@ export class NormalQuiz extends BaseClass {
 	 * クリック処理
 	 * @param {Object} obj クリック対象
 	 */
-	click(obj) {
+	async click(obj) {
 		if(obj.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1) {
 			this.objCols.map((o) => {
 				if(o.name == PANEL_NORMAL_QUIZ.QUESTION_TEXT.NAME) {
@@ -242,6 +242,8 @@ export class NormalQuiz extends BaseClass {
 					Common.drawText(o);
 				}
 			});
+			// 集計
+			this.updateCorrectAnswerCount(this.normalQuizData[0].id, obj.isCorrect)
 			this.normalQuizData.shift();
 			if(this.normalQuizData.length == 0) {
 				this.objCols.state &= ~TEXT_STATE.ACTIVE;
@@ -263,5 +265,12 @@ export class NormalQuiz extends BaseClass {
 	 */
 	hover(obj) {
 		
+	}
+	
+	async updateCorrectAnswerCount(id, isCorrect) {
+		let param = "";
+		param += "?id=" + id;
+		param += "&isCorrect=" + (isCorrect ? 1: 0);
+	    await fetch(HOST_PATH + "/correct-answer-count" + param).then();
 	}
 }

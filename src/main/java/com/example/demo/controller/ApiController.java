@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dao.CorrectAnswerCountDao;
 import com.example.demo.dao.QuizMasterDao;
 import com.example.demo.dao.WeaponMasterDao;
 import com.example.demo.dao.WeaponQuestionDao;
@@ -48,5 +49,12 @@ public class ApiController {
     	QuizMasterDao quizMasterDao = new QuizMasterDao();
     	List<QuizMasterDto> quizMaster = quizMasterDao.find(typeList, isNanikore, isRankaku, levelList);
     	return quizMaster;
+    }
+    @RequestMapping(value = "/correct-answer-count", method = RequestMethod.GET)
+	public void setCorrectCount(@RequestParam(name = "id")Integer quizMasterId, 
+			@RequestParam(name = "isCorrect")Integer isCorrect) {
+    	CorrectAnswerCountDao correctAnswerCountDao = new CorrectAnswerCountDao();
+    	correctAnswerCountDao.update(quizMasterId, isCorrect);
+    	return;
     }
 }
