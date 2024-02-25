@@ -1,17 +1,13 @@
 import { BaseClass } from "./base_class.js";
 import { Common } from "./common.js";
 import { ModeSelect } from "./mode_select.js";
-export class NormalQuiz extends BaseClass {
+export class Kentei extends BaseClass {
 	/**
 	 * コンストラクタ
 	 */
-	constructor(types, levels, isNanikore, isRankaku) {
+	constructor() {
 		super();
-		this.normalQuizData = {};
-		this.normalQuizType = types;
-		this.normalQuizLevel = levels;
-		this.normalQuizIsNanikore = isNanikore;
-		this.normalQuizIsRankaku = isRankaku;
+		this.quizData = {};
 	}
 	
 	/**
@@ -19,7 +15,7 @@ export class NormalQuiz extends BaseClass {
 	 */
 	init() {
 		super.init();
-		this.normalQuizData = {};
+		this.quizData = {};
 	}
 	
 	/**
@@ -27,11 +23,7 @@ export class NormalQuiz extends BaseClass {
 	 */
 	uninit() {
 		super.uninit();
-		this.normalQuizData = {};
-		this.normalQuizType = [];
-		this.normalQuizLevel = [];
-		this.normalQuizIsNanikore = 0;
-		this.normalQuizIsRankaku = 0;
+		this.quizData = {};
 	}
 	
 	/**
@@ -40,35 +32,20 @@ export class NormalQuiz extends BaseClass {
 	async create() {
 		this.init();
 		let where = "";
-		where += "?type=" + this.normalQuizType;
-		where += "&nanikore=" + this.normalQuizIsNanikore;
-		where += "&rankaku=" + this.normalQuizIsRankaku;
-		where += "&level=" + this.normalQuizLevel
-	    this.normalQuizData = await fetch(HOST_PATH + "/quiz" + where).then(function(res) {
+		const NUMS = 2;
+		where += "?nums=" + NUMS;
+	    this.quizData = await fetch(HOST_PATH + "/quiz-kentei" + where).then(function(res) {
 	        return res.json();
 	    })
-	    
 	    // 選択肢を配列にする
-	    this.normalQuizData.map((obj) => {
+	    this.quizData.map((obj) => {
 			obj.answerList = obj.answerList.split(", ");
 			if(obj.questionImage)
 				obj.questionImage = IMAGE_PATH + obj.questionImage;
 			if(obj.answerImage)
 				obj.answerImage = IMAGE_PATH + obj.answerImage;
 		});
-		let nums = forRange(161, 170);
-		this.normalQuizData = this.normalQuizData.filter((o) => nums.includes((o.id)));
-	    // 乱数でソート
-//	    if(this.normalQuizData.length > 1) {
-//			const cloneArray = JSON.parse(JSON.stringify(this.normalQuizData));
-//			this.normalQuizData = cloneArray.reduce((prev, cur, idx) => {
-//				let rand = getRandomInt(idx + 1);
-//				cloneArray[idx] = cloneArray[rand];
-//				cloneArray[rand] = cur;
-//				return cloneArray;
-//			});
-//		}
-		if(this.normalQuizData.length > 0) {
+		if(this.quizData.length > 0) {
 			this.objCols = this.createObject();
 			Common.drawAll(this.objCols);
 		} else {
@@ -82,7 +59,7 @@ export class NormalQuiz extends BaseClass {
 			Common.drawAll(this.objCols);
 		}
 	}
-	
+		
 	/**
 	 * オブジェクト作成
 	 * @return {Object[]} 当たり判定用オブジェクトリスト
@@ -95,8 +72,8 @@ export class NormalQuiz extends BaseClass {
 		var ANSWER_IMAGE = PANEL_NORMAL_QUIZ.ANSWER_IMAGE;
 		var CORRECT_IMAGE = PANEL_NORMAL_QUIZ.CORRECT_IMAGE;
 		var INCORRECT_IMAGE = PANEL_NORMAL_QUIZ.INCORRECT_IMAGE;
-		var MORE_BUTTON = PANEL_NORMAL_QUIZ.MORE_BUTTON;
-		var RETURN_BUTTON = PANEL_NORMAL_QUIZ.RETURN_BUTTON;
+		var MORE_BUTTON = PANEL_KENTEI.MORE_BUTTON;
+		var RETURN_BUTTON = PANEL_KENTEI.RETURN_BUTTON;
 		
 		cols.push(Common.createObject(BACKGROUND_IMAGE));
 		
@@ -113,7 +90,7 @@ export class NormalQuiz extends BaseClass {
 			if(quizDiff.buttons[i]) {
 				answerButtonObj.text = quizDiff.buttons[i].text;
 				answerButtonObj.state |= TEXT_STATE.ENABLE;
-				answerButtonObj.isCorrect = (i + 1 == this.normalQuizData[0].answerIndex) ? true : false;
+				answerButtonObj.isCorrect = (i + 1 == this.quizData[0].answerIndex) ? true : false;
 			}
 			answerButtons.push(answerButtonObj);
 		}
@@ -140,19 +117,19 @@ export class NormalQuiz extends BaseClass {
 	 */
 	createDiff() {
 		let ret = {};
-		let type = this.normalQuizData[0].type == 1 ? "通常" : "雑学";
-		ret.text = "残り問題数：" + this.normalQuizData.length + "　問題番号：" + this.normalQuizData[0].id + "　種別：" + type + "\\n" + this.normalQuizData[0].question;
+		let type = this.quizData[0].type == 1 ? "通常" : "雑学";
+		ret.text = "残り問題数：" + this.quizData.length + "　問題番号：" + this.quizData[0].id + "　種別：" + type + "\\n" + this.quizData[0].question;
 		
 		let buttons = [];
-		for(let i = 0; i < this.normalQuizData[0].answerList.length; i++) {
+		for(let i = 0; i < this.quizData[0].answerList.length; i++) {
 			let obj = {};
-			obj.text = this.normalQuizData[0].answerList[i];
+			obj.text = this.quizData[0].answerList[i];
 			buttons.push(obj);
 		}
 		ret.buttons = buttons;
-		ret.questionImage = this.normalQuizData[0].questionImage;
-		ret.answerImage = this.normalQuizData[0].answerImage;
-		console.log("問題の更新　問題番号：" + this.normalQuizData[0].id)
+		ret.questionImage = this.quizData[0].questionImage;
+		ret.answerImage = this.quizData[0].answerImage;
+		console.log("問題の更新　問題番号：" + this.quizData[0].id)
 		return ret;
 	}
 	
@@ -168,10 +145,10 @@ export class NormalQuiz extends BaseClass {
 		Common.findNameExecFunc(this.objCols, QUESTION_TEXT.NAME, (o) => o.text = quizDiff.text);
 		// ボタンの参照を取得
 		let answerButtons = this.objCols.filter((o) => o.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1);
-		for(let i = 0; i < this.normalQuizData[0].answerList.length; i++) {
+		for(let i = 0; i < this.quizData[0].answerList.length; i++) {
 			answerButtons[i].text = quizDiff.buttons[i].text;
 			answerButtons[i].state |= TEXT_STATE.ENABLE;
-			answerButtons[i].isCorrect = (i + 1 == this.normalQuizData[0].answerIndex) ? true : false;
+			answerButtons[i].isCorrect = (i + 1 == this.quizData[0].answerIndex) ? true : false;
 		}
 		// シャッフル
 		this.shuffleAnswer(answerButtons);
@@ -184,7 +161,7 @@ export class NormalQuiz extends BaseClass {
 	 */
 	shuffleAnswer(answers) {
 		// 問題情報のみをシャッフル
-		for (let i = this.normalQuizData[0].answerList.length - 1; i >= 0; i--) {
+		for (let i = this.quizData[0].answerList.length - 1; i >= 0; i--) {
 			let rand = Math.floor(Math.random() * (i + 1));
 			let tmpStorage = {
 				text: answers[i].text,
@@ -208,18 +185,18 @@ export class NormalQuiz extends BaseClass {
 		if(obj.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1) {
 			this.objCols.map((o) => {
 				if(o.name == PANEL_NORMAL_QUIZ.QUESTION_TEXT.NAME) {
-					let type = this.normalQuizData[0].type == 1 ? "通常" : "雑学";
-					let isNanikore = this.normalQuizData[0].isNanikore == 1 ? "〇" : "×";
-					let isRankaku = this.normalQuizData[0].isRankaku == 1 ? "〇" : "×";
-					o.text = "残り問題数：" + this.normalQuizData.length + "　問題番号：" + this.normalQuizData[0].id + "　種別：" + type + "　難易度：" + this.normalQuizData[0].level + "/10" + "　ナニコレ：" + isNanikore + "　乱獲：" + isRankaku + "\\n【解説】" + this.normalQuizData[0].note;
+					let type = this.quizData[0].type == 1 ? "通常" : "雑学";
+					o.text = "残り問題数：" + this.quizData.length + "　問題番号：" + this.quizData[0].id + "　種別：" + type + "　難易度：" + this.quizData[0].level + "/10\\n【解説】" + this.quizData[0].note;
 					Common.drawText(o);
-				} else if(o.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
-					if(this.normalQuizData.length > 1)
+				} else if(o.name == PANEL_KENTEI.MORE_BUTTON.NAME) {
+					if(this.quizData.length > 1)
 						o.state ^= TEXT_STATE.ENABLE;
 					Common.drawText(o);
-				}else if(o.name == PANEL_NORMAL_QUIZ.RETURN_BUTTON.NAME) {
-					o.state ^= TEXT_STATE.ENABLE;
-					Common.drawText(o);
+				}else if(o.name == PANEL_KENTEI.RETURN_BUTTON.NAME) {
+					if(this.quizData.length == 1) {
+						o.state ^= TEXT_STATE.ENABLE;
+						Common.drawText(o);
+					}
 				} else if(o.name.indexOf(PANEL_NORMAL_QUIZ.ANSWER_BUTTON.NAME) != -1) {
 					if(o.isCorrect) {
 						o.state |= TEXT_STATE.HILIGHT;
@@ -247,17 +224,17 @@ export class NormalQuiz extends BaseClass {
 				}
 			});
 			// 集計
-			this.updateCorrectAnswerCount(this.normalQuizData[0].id, obj.isCorrect)
-			this.normalQuizData.shift();
-			if(this.normalQuizData.length == 0) {
+			this.updateCorrectAnswerCount(this.quizData[0].id, obj.isCorrect)
+			this.quizData.shift();
+			if(this.quizData.length == 0) {
 				this.objCols.state &= ~TEXT_STATE.ACTIVE;
 			}
-		} else if(obj.name == PANEL_NORMAL_QUIZ.MORE_BUTTON.NAME) {
+		} else if(obj.name == PANEL_KENTEI.MORE_BUTTON.NAME) {
 			Common.resetState(this.objCols);
 			this.updateObject();
 			Common.clear(CANVAS_WIDTH, CANVAS_HEIGHT);
 			Common.drawAll(this.objCols);
-		} else if(obj.name == PANEL_NORMAL_QUIZ.RETURN_BUTTON.NAME) {
+		} else if(obj.name == PANEL_KENTEI.RETURN_BUTTON.NAME) {
 			this.uninit();
 			Common.changeMode(new ModeSelect());
 		}

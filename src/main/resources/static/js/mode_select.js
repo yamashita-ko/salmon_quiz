@@ -2,6 +2,7 @@ import { BaseClass } from "./base_class.js";
 import { Common } from "./common.js";
 import { WeaponQuiz } from "./weapon_quiz.js";
 import { NormalQuiz } from "./normal_quiz.js";
+import { Kentei } from "./kentei.js";
 export class ModeSelect extends BaseClass{
 	/**
 	 * コンストラクタ
@@ -246,6 +247,9 @@ export class ModeSelect extends BaseClass{
 		}
 		if(obj.name == PANEL_MODE_SELECT.WEAPON_QUIZ_START_BUTTON.NAME) {
 			Common.changeMode(new WeaponQuiz());
+		}
+		if(obj.name == PANEL_MODE_SELECT.BUTTON.NAME[PANEL_MODE_SELECT.BUTTON.INDEX.KENTEI - 1]) {
+			Common.changeMode(new Kentei());
 		}
 	}
 	

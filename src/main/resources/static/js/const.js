@@ -32,9 +32,8 @@ var MODE = {
 	SELECT: "mode_select",
 	WEAPON_QUIZ: "mode_weapon_quiz",
 	WEAPON_QUIZ_RESULT: "mode_weapon_quiz_result",
-	ENEMY_QUIZ: "mode_enemy_quiz",
 	NORMAL_QUIZ: "mode_normal_quiz",
-	DIFFICULT_QUIZ: "mode_difficult_quiz"
+	KENTEI: "mode_kentei"
 };
 
 var GROUP = {
@@ -62,19 +61,19 @@ var PANEL_MODE_SELECT = {
 		INDEX: {
 			WEAPON_QUIZ: 1,
 			NORMAL_QUIZ: 2,
-			QUIZ1: 3,
+			KENTEI: 3,
 			QUIZ2: 4,
 		},
 		NAME: [
 			"mode_weapon_quiz",
 			"mode_normal_quiz",
-			"mode_kari1",
+			"mode_kentei",
 			"mode_kari2",
 		],
 		TEXT: [
 			"ブキクイズ",
 			"ツウジョウクイズ",
-			"クイズイチ",
+			"サモランケンテイ",
 			"クイズニ",
 		],
 		FONT_SIZE: 50,
@@ -603,7 +602,7 @@ var PANEL_NORMAL_QUIZ = {
 	ANSWER_IMAGE: {
 		NAME: "answer_image",
 		CENTERX: 1600,
-		CENTERY: 570,
+		CENTERY: 620,
 		SCALEX: 550,
 		SCALEY: 550,
 		STATE: TEXT_STATE.ACTIVE | TEXT_STATE.IMAGE | TEXT_STATE.BG_DISABLE | TEXT_STATE.ADJUST_ASPECT,
@@ -645,6 +644,44 @@ var PANEL_NORMAL_QUIZ = {
 	RETURN_BUTTON: {
 		NAME: "return_button",
 		TEXT: "モード選択画面へ戻る",
+		FONT_SIZE: 32,
+		CENTERX: 1600,
+		CENTERY: 950,
+		SCALEX: 400,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000",
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
+	},
+};
+
+
+/**
+ * ケンテイ画面
+ */
+var PANEL_KENTEI = {
+	MORE_BUTTON: {
+		NAME: "more_button",
+		TEXT: "次の問題へ",
+		FONT_SIZE: 32,
+		CENTERX: 1600,
+		CENTERY: 950,
+		SCALEX: 400,
+		SCALEY: 100,
+		TEXT_COLOR: "#FFFFFF",
+		BG_COLOR: {
+			NORMAL: "#0070C0",
+			HOVER: "#FFC000",
+			DISABLE: "#555555"
+		},
+		STATE: TEXT_STATE.IS_TEXT | TEXT_STATE.IS_BUTTON | TEXT_STATE.ACTIVE | TEXT_STATE.CENTERX | TEXT_STATE.CENTERY | TEXT_STATE.BG_KADOMARU,
+	},
+	RETURN_BUTTON: {
+		NAME: "return_button",
+		TEXT: "結果へ",
 		FONT_SIZE: 32,
 		CENTERX: 1600,
 		CENTERY: 950,
